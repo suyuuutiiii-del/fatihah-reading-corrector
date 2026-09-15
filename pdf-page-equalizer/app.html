@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#2457d6">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <title>PDF Page Equalizer</title>
+  <style>
+    html,body{margin:0;width:100%;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f4f7fb;color:#172033}
+    #top{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#fff;border-bottom:1px solid #dfe5ef;position:relative;z-index:2;box-sizing:border-box}
+    #title{font-weight:800;flex:1}button{border:0;border-radius:10px;padding:10px 13px;font-weight:750;background:#2457d6;color:#fff}#install{display:none}
+    #status{font-size:12px;color:#687189;padding:5px 12px;background:#fff;border-bottom:1px solid #eef1f6}
+    #frame{border:0;width:100%;height:calc(100% - 82px);display:none;background:#f4f7fb}
+    #loading{display:grid;place-items:center;height:calc(100% - 82px);padding:24px;text-align:center;box-sizing:border-box}.box{max-width:520px;background:#fff;border:1px solid #dfe5ef;border-radius:18px;padding:22px;box-shadow:0 10px 35px rgba(23,32,51,.08)}
+    .ok{color:#12824c;font-weight:800}.small{font-size:13px;color:#687189;line-height:1.5}
+  </style>
+</head>
+<body>
+  <div id="top"><div id="title">PDF Page Equalizer</div><button id="install">Install App</button></div>
+  <div id="status">Preparing offline mode…</div>
+  <div id="loading"><div class="box"><div class="ok">Preparing your offline Equalizer</div><p>The app is storing the files it needs on this phone.</p><p class="small">After the app has opened successfully once, you can use it without internet. For easiest access in Chrome, choose <b>Add to Home screen</b> or use the Install App button when it appears.</p></div></div>
+  <iframe id="frame" title="PDF Page Equalizer"></iframe>
+<script>
+let installPrompt=null;
+const installButton=document.getElementById('install');
+const status=document.getElementById('status');
+const frame=document.getElementById('frame');
+const loading=document.getElementById('loading');
+
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  installPrompt=e;
+  installButton.style.display='block';
+});
+installButton.addEventListener('click',async()=>{
+  if(!installPrompt)return;
+  installPrompt.prompt();
+  await installPrompt.userChoice;
+  installPrompt=null;
+  installButton.style.display='none';
+});
+window.addEventListener('appinstalled',()=>{
+  status.textContent='Installed. Offline use is available after the first successful load.';
+  installButton.style.display='none';
+});
+
+async function start(){
+  try{
+    if('serviceWorker' in navigator){
+      await navigator.serviceWorker.register('./sw.js',{scope:'./'});
+      await navigator.serviceWorker.ready;
+      status.textContent = navigator.onLine ? 'Offline files prepared. You may install this app on the phone.' : 'Offline mode — no internet connection required.';
+    }else{
+      status.textContent='This browser does not support offline app installation.';
+    }
+  }catch(e){
+    status.textContent='Offline preparation was incomplete. Keep internet on for this first opening.';
+  }
+  frame.src='./index.html';
+  frame.style.display='block';
+  loading.style.display='none';
+}
+window.addEventListener('online',()=>status.textContent='Online. Offline mode remains available after successful preparation.');
+window.addEventListener('offline',()=>status.textContent='Offline mode — processing stays on this device.');
+start();
+</script>
+</body>
+</html>
