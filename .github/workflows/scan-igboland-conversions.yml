@@ -1,5 +1,10 @@
 name: Scan Igboland Conversion Reports
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'igboland/automation/**'
+      - '.github/workflows/scan-igboland-conversions.yml'
   schedule:
     - cron: '15 6 * * *'
   workflow_dispatch:
