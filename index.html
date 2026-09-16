@@ -6,41 +6,165 @@
 <meta name="theme-color" content="#075b43">
 <title>Al-Fātiḥah Tajwīd Corrector</title>
 <style>
-:root{--g:#075b43;--dg:#043e2e;--gold:#e9bd4c;--muted:#647069;--red:#a93b3b;--amber:#8b6508}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(155deg,#e4f3ea,#fffdf7 57%,#efe5bf);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#17211c}main{max-width:720px;margin:auto;padding:16px 12px 34px}header{text-align:center}.logo{width:52px;height:52px;border-radius:15px;background:var(--g);color:var(--gold);display:grid;place-items:center;margin:auto;font-size:25px}h1{font-size:clamp(1.4rem,5vw,2rem);color:var(--dg);margin:9px 0 3px}header p{margin:0 0 14px;color:var(--muted)}
-.card{background:#fff;border:1px solid #d9e8df;border-radius:22px;padding:16px;box-shadow:0 14px 40px #164a3718}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#edf3ef;border-radius:14px;padding:5px;margin-bottom:15px}.tab{border:0;border-radius:10px;padding:10px 5px;background:transparent;font-weight:800;color:#55625b;font-size:.86rem}.tab.active{background:var(--g);color:white}.panel{display:none}.panel.active{display:block}.stage{display:inline-block;background:#fff1cc;color:#654e00;border-radius:999px;padding:6px 10px;font-size:.78rem;font-weight:800}.arabic{direction:rtl;text-align:center;font-family:"Traditional Arabic","Noto Naskh Arabic","Amiri",serif;font-size:clamp(2.15rem,8.5vw,3.35rem);line-height:1.9;color:#10291f;margin:10px 0}.meaning{text-align:center;color:var(--muted);margin:0 0 12px}.focus{background:#f6faf7;border:1px solid #d8e8df;border-radius:15px;padding:12px;margin:10px 0}.focus strong{color:var(--dg)}.focus ul{margin:7px 0 0;padding-left:20px}.focus li{margin:6px 0;line-height:1.35}.status{min-height:58px;border-radius:13px;background:#f1f6f3;padding:11px;text-align:center;display:grid;place-items:center;line-height:1.4;color:#4d5a53}.status.good{background:#e5f5eb;color:#176b49;font-weight:750}.status.bad{background:#fbe9e9;color:var(--red)}.status.listen{background:#e8f5ee;color:var(--g);font-weight:750}.status.warn{background:#fff4d8;color:var(--amber)}.mic{width:94px;height:94px;border:0;border-radius:50%;background:var(--g);color:white;display:grid;place-items:center;margin:17px auto 8px;box-shadow:0 9px 0 #064333,0 15px 27px #075b4338}.mic.on{background:#ad3838;box-shadow:0 9px 0 #782929,0 15px 27px #ad383838}.mic svg{width:39px}.hint{text-align:center;color:var(--muted);font-size:.92rem}.result{display:none;margin-top:13px;border-radius:15px;background:#f7faf8;border:1px solid #dce8e1;padding:13px}.result.show{display:block}.metric{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #e5ede8}.metric:last-child{border-bottom:0}.metric b{color:var(--dg)}.player{width:100%;margin-top:10px}.progress{display:flex;align-items:center;gap:9px}.track{height:8px;background:#e1ebe5;border-radius:8px;flex:1;overflow:hidden}.fill{height:100%;background:var(--g)}.count{font-weight:800;color:var(--g)}.nav,.stageNav{display:flex;justify-content:space-between;gap:9px;margin-top:14px}.nav button,.stageNav button{padding:10px 13px;border:1px solid #cad8d0;border-radius:11px;background:white;color:var(--dg);font-weight:750}.nav .next,.stageNav .primary{background:var(--dg);color:white}.nav button:disabled{opacity:.35}.note{text-align:center;color:#69736e;font-size:.8rem;line-height:1.45;margin:13px 7px}@media(max-width:420px){main{padding:12px 8px 25px}.card{padding:13px 10px}.focus ul{padding-left:18px}.tabs{grid-template-columns:1fr}.tab{font-size:.93rem}}
+:root{--g:#075b43;--dg:#043e2e;--gold:#e9bd4c;--muted:#647069;--red:#a93b3b;--amber:#8b6508;--pale:#f6faf7}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(155deg,#e4f3ea,#fffdf7 57%,#efe5bf);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#17211c}
+main{max-width:760px;margin:auto;padding:15px 11px 34px}
+header{text-align:center}.logo{width:52px;height:52px;border-radius:15px;background:var(--g);color:var(--gold);display:grid;place-items:center;margin:auto;font-size:25px}
+h1{font-size:clamp(1.35rem,5vw,2rem);color:var(--dg);margin:9px 0 3px}header p{margin:0 0 14px;color:var(--muted)}
+.card{background:#fff;border:1px solid #d9e8df;border-radius:22px;padding:15px;box-shadow:0 14px 40px #164a3718}
+.stagegrid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;background:#edf3ef;border-radius:15px;padding:6px;margin-bottom:14px}.stagebtn{border:0;border-radius:11px;padding:10px 7px;background:transparent;color:#526058;font-size:.89rem;font-weight:800;line-height:1.25}.stagebtn.active{background:var(--g);color:#fff}.stagebtn.full{grid-column:1/-1;background:#fff;border:1px solid #d8e5dd}.stagebtn.full.active{background:var(--dg);color:white}
+.badge{display:inline-block;background:#fff1cc;color:#654e00;border-radius:999px;padding:6px 10px;font-size:.78rem;font-weight:800}.arabic{direction:rtl;text-align:center;font-family:"Traditional Arabic","Noto Naskh Arabic","Amiri",serif;font-size:clamp(2.05rem,8.3vw,3.3rem);line-height:1.9;color:#10291f;margin:9px 0}.meaning{text-align:center;color:var(--muted);line-height:1.45;margin:0 0 11px}
+.focus{background:var(--pale);border:1px solid #d8e8df;border-radius:15px;padding:12px;margin:9px 0}.focus strong{color:var(--dg)}.focus ul{margin:7px 0 0;padding-left:20px}.focus li{margin:6px 0;line-height:1.38}
+.status{min-height:58px;border-radius:13px;background:#f1f6f3;padding:11px;text-align:center;display:grid;place-items:center;line-height:1.4;color:#4d5a53}.status.good{background:#e5f5eb;color:#176b49;font-weight:750}.status.bad{background:#fbe9e9;color:var(--red)}.status.listen{background:#e8f5ee;color:var(--g);font-weight:750}.status.warn{background:#fff4d8;color:var(--amber)}
+.mic{width:94px;height:94px;border:0;border-radius:50%;background:var(--g);color:white;display:grid;place-items:center;margin:17px auto 8px;box-shadow:0 9px 0 #064333,0 15px 27px #075b4338}.mic.on{background:#ad3838;box-shadow:0 9px 0 #782929,0 15px 27px #ad383838}.mic svg{width:39px}.hint{text-align:center;color:var(--muted);font-size:.92rem}.result{display:none;margin-top:13px;border-radius:15px;background:#f7faf8;border:1px solid #dce8e1;padding:13px}.result.show{display:block}.metric{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid #e5ede8}.metric:last-child{border-bottom:0}.metric b{color:var(--dg);text-align:right}.player{width:100%;margin-top:10px}.nav{display:flex;justify-content:space-between;gap:9px;margin-top:14px}.nav button{padding:10px 13px;border:1px solid #cad8d0;border-radius:11px;background:white;color:var(--dg);font-weight:750}.nav .next{background:var(--dg);color:white}.nav button:disabled{opacity:.35}.note{text-align:center;color:#69736e;font-size:.8rem;line-height:1.45;margin:13px 7px}.fullview{display:none}.fullview.show{display:block}.verseCard{border-bottom:1px solid #e2ebe6;padding:10px 2px}.verseCard:last-child{border-bottom:0}.verseNo{font-size:.78rem;color:var(--g);font-weight:800}.verseText{direction:rtl;text-align:right;font-family:"Traditional Arabic","Noto Naskh Arabic","Amiri",serif;font-size:1.75rem;line-height:1.7;color:#10291f}.returnBtn{display:block;margin:13px auto 0;padding:10px 14px;border:0;border-radius:11px;background:var(--dg);color:#fff;font-weight:800}
+@media(max-width:420px){main{padding:11px 7px 25px}.card{padding:12px 9px}.focus ul{padding-left:18px}.stagegrid{grid-template-columns:1fr}.stagebtn.full{grid-column:auto}.metric{font-size:.94rem}}
 </style>
 </head>
 <body><main>
-<header><div class="logo">◈</div><h1>Al-Fātiḥah Tajwīd Corrector</h1><p>Āyah-by-āyah practice and correction</p></header>
+<header><div class="logo">◈</div><h1>Al-Fātiḥah Tajwīd Corrector</h1><p>Seven-stage āyah-by-āyah practice</p></header>
 <section class="card">
-<div class="tabs"><button id="stage1Tab" class="tab active">1 • Bismillah</button><button id="stage2Tab" class="tab">2 • Al-ḥamdu lillāh</button><button id="surahTab" class="tab">Full Fātiḥah</button></div>
-<div id="stage1Panel" class="panel active">
-<span class="stage">STAGE 1 • BISMILLAH</span><div class="arabic" lang="ar">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div><p class="meaning">Read the complete Bismillah naturally.</p>
-<div class="focus"><strong>Practice focus</strong><ul><li><b>اللَّهِ</b>: the lām is light because it follows a kasrah.</li><li><b>الرَّحْمَٰنِ</b>: the lām of ال is assimilated into <b>رّ</b>; give the rā its shaddah and keep the natural madd at <b>مَٰ</b>.</li><li><b>الرَّحِيمِ</b>: give <b>رّ</b> its shaddah and keep the natural madd at <b>حِي</b>.</li></ul></div>
-<div id="s1Status" class="status">Press the green microphone, recite Bismillah, then press it again to stop.</div><button id="s1Mic" class="mic" aria-label="Record Bismillah"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></svg></button><p id="s1Hint" class="hint">Press once to record • Press again to stop</p>
-<div id="s1Result" class="result"><div class="metric"><span>Recognised words</span><b id="s1Words">—</b></div><div class="metric"><span>Total recitation time</span><b id="s1Time">—</b></div><div class="metric"><span>Timing practice check</span><b id="s1Pace">—</b></div><audio id="s1Audio" class="player" controls></audio><p id="s1Advice" class="note"></p></div><div class="stageNav"><button id="toStage2" class="primary">Next: الْحَمْدُ لِلَّهِ →</button></div>
+<div id="stageGrid" class="stagegrid"></div>
+
+<div id="practiceView">
+<span id="badge" class="badge"></span>
+<div id="arabic" class="arabic" lang="ar"></div>
+<p id="meaning" class="meaning"></p>
+<div class="focus"><strong>Practice focus</strong><ul id="focusList"></ul></div>
+<div id="status" class="status">Press the green microphone, recite the displayed āyah, then press again to stop.</div>
+<button id="mic" class="mic" aria-label="Record āyah"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></svg></button>
+<p id="hint" class="hint">Press once to record • Press again to stop</p>
+<div id="result" class="result"><div class="metric"><span>Recognised words</span><b id="wordResult">—</b></div><div class="metric"><span>Total recitation time</span><b id="timeResult">—</b></div><div class="metric"><span>Timing practice check</span><b id="paceResult">—</b></div><audio id="audio" class="player" controls></audio><p id="advice" class="note"></p></div>
+<div class="nav"><button id="prev">← Previous</button><button id="next" class="next">Next āyah →</button></div>
 </div>
-<div id="stage2Panel" class="panel">
-<span class="stage">STAGE 2 • ĀYAH 2</span><div class="arabic" lang="ar">الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</div><p class="meaning">All praise is for Allah, Lord of all worlds.</p>
-<div class="focus"><strong>What this test focuses on</strong><ul><li><b>الْحَمْدُ</b>: pronounce the lām of <b>الْ</b> clearly; do not swallow it.</li><li><b>لِلَّهِ</b>: the lām in the name of Allah is light because it is preceded by kasrah.</li><li><b>رَبِّ</b>: give the <b>بّ</b> its shaddah; do not read it as a single bā.</li><li><b>الْعَالَمِينَ</b>: pronounce the lām of <b>الْ</b> clearly and keep the natural madd in <b>عَا</b> for about two counts. If stopping at the end, the final madd in <b>مِينْ</b> may be 2, 4, or 6 counts.</li></ul></div>
-<div id="s2Status" class="status">Press the green microphone, recite the complete āyah, then press it again to stop.</div><button id="s2Mic" class="mic" aria-label="Record Alhamdulillahi Rabbil Alamin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></svg></button><p id="s2Hint" class="hint">Press once to record • Press again to stop</p>
-<div id="s2Result" class="result"><div class="metric"><span>Recognised words</span><b id="s2Words">—</b></div><div class="metric"><span>Total recitation time</span><b id="s2Time">—</b></div><div class="metric"><span>Timing practice check</span><b id="s2Pace">—</b></div><audio id="s2Audio" class="player" controls></audio><p id="s2Advice" class="note"></p></div><div class="stageNav"><button id="backStage1">← Bismillah</button><button id="toFull" class="primary">Full Fātiḥah →</button></div>
-</div>
-<div id="surahPanel" class="panel"><div class="progress"><div class="track"><div id="fill" class="fill"></div></div><span id="count" class="count"></span></div><div id="arabic" class="arabic" lang="ar"></div><p id="meaning" class="meaning"></p><div id="surahStatus" class="status">Press the microphone and read the displayed āyah.</div><button id="surahMic" class="mic" aria-label="Record āyah"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10a7 7 0 0 0 14 0M12 17v5M8 22h8"/></svg></button><p id="surahHint" class="hint">Press once to record • Press again to stop</p><div id="surahResult" class="result"><audio id="surahAudio" class="player" controls></audio><p id="surahCheck" class="note"></p></div><div class="nav"><button id="prev">← Previous</button><button id="next" class="next">Next āyah →</button></div></div>
+
+<div id="fullView" class="fullview"></div>
 </section>
-<p class="note">Stages 1–2 currently check recognised words and overall timing. The timing message is a practice estimate, not yet a precise acoustic measurement of each individual madd, shaddah, or makhraj.</p>
+<p class="note">This version records every āyah, checks browser-recognised words when available, and gives an overall timing practice estimate. It does not yet make a precise acoustic measurement of each individual madd, shaddah, makhraj, or letter quality.</p>
 <script>
-const $=id=>document.getElementById(id);const stageTargets={s1:'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',s2:'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ'};const verses=[[stageTargets.s1,'In the name of Allah, the Most Compassionate, the Most Merciful.'],[stageTargets.s2,'All praise is for Allah—Lord of all worlds.'],['الرَّحْمَٰنِ الرَّحِيمِ','The Most Compassionate, the Most Merciful.'],['مَالِكِ يَوْمِ الدِّينِ','Master of the Day of Judgement.'],['إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ','You alone we worship and You alone we ask for help.'],['اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ','Guide us along the Straight Path.'],['صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ','The path of those You have blessed—not those You are displeased with, or those who are astray.']];const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let current=0,activeRecorder=null,activeStream=null,chunks=[],recordingKind='',startedAt=0,recognition=null,recognisedText='',lastUrl='';
-function showPanel(which){['stage1','stage2','surah'].forEach(x=>{$(x+'Panel').classList.toggle('active',x===which);$(x+'Tab').classList.toggle('active',x===which)})}$('stage1Tab').onclick=()=>showPanel('stage1');$('stage2Tab').onclick=()=>showPanel('stage2');$('surahTab').onclick=()=>showPanel('surah');$('toStage2').onclick=()=>showPanel('stage2');$('backStage1').onclick=()=>showPanel('stage1');$('toFull').onclick=()=>showPanel('surah');
-function norm(s){return(s||'').normalize('NFD').replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g,'').replace(/[إأآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\u0621-\u063A\u0641-\u064A ]/g,' ').replace(/\s+/g,' ').trim()}function similarity(a,b){const x=norm(a).split(' ').filter(Boolean),y=norm(b).split(' ').filter(Boolean);if(!y.length)return 0;let n=0;y.forEach((w,j)=>{if(x[j]===w)n++});return n/y.length}
-function startRecognition(expected){recognisedText='';if(!SR)return;try{recognition=new SR();recognition.lang='ar-SA';recognition.interimResults=false;recognition.continuous=false;recognition.maxAlternatives=5;recognition.onresult=e=>{let best='',bestScore=-1;for(let n=0;n<e.results[0].length;n++){const t=e.results[0][n].transcript,sc=similarity(t,expected);if(sc>bestScore){bestScore=sc;best=t}}recognisedText=best};recognition.onerror=()=>{};recognition.start()}catch(e){}}function chooseMime(){if(!window.MediaRecorder)return'';for(const t of['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus']){if(MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))return t}return''}
-function statusEl(kind){return kind==='s1'?$('s1Status'):kind==='s2'?$('s2Status'):$('surahStatus')}function setStatus(kind,text,cls=''){const el=statusEl(kind);el.textContent=text;el.className='status '+cls}
-async function startRecord(kind,expected){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setStatus(kind,'Microphone access is unavailable. Open this HTTPS site in Google Chrome.','bad');return}if(!window.MediaRecorder){setStatus(kind,'This browser cannot make an in-page recording.','bad');return}try{activeStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});const mime=chooseMime();activeRecorder=mime?new MediaRecorder(activeStream,{mimeType:mime}):new MediaRecorder(activeStream);chunks=[];recognisedText='';recordingKind=kind;startedAt=performance.now();activeRecorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};activeRecorder.onstop=()=>{const seconds=(performance.now()-startedAt)/1000;const blob=new Blob(chunks,{type:activeRecorder.mimeType||mime||'audio/webm'});if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);if(activeStream){activeStream.getTracks().forEach(t=>t.stop());activeStream=null}finishRecord(kind,expected,seconds,lastUrl)};activeRecorder.start();startRecognition(expected);$(kind+'Mic').classList.add('on');$(kind+'Hint').textContent='Recording… press again to stop';setStatus(kind,'Listening… Recite naturally.','listen')}catch(e){setStatus(kind,e&&e.name==='NotAllowedError'?'Microphone permission was denied. Allow it in Chrome settings and try again.':'The microphone could not start.','bad')}}
-function stopRecord(kind){if(!activeRecorder||activeRecorder.state==='inactive')return;try{if(recognition)recognition.stop()}catch(e){}activeRecorder.stop();$(kind+'Mic').classList.remove('on');$(kind+'Hint').textContent='Press once to record • Press again to stop'}
-function stageTiming(kind,seconds){if(kind==='s1'){if(seconds<2.2)return['Very fast','Your overall Bismillah was very short. A madd or shaddah may have been shortened. Repeat more slowly, especially الرَّحْمَٰنِ and الرَّحِيمِ.','warn'];if(seconds>7)return['Very slow','Read naturally without over-stretching ordinary sounds.','warn'];return['Plausible overall pace','The overall pace leaves room for the required sounds. Exact madd and shaddah measurement will be added in a later acoustic stage.','good']}if(kind==='s2'){if(seconds<2.0)return['Very fast','This āyah was very short. Check that رَبِّ has a real shaddah and that عَا in الْعَالَمِينَ is not shortened.','warn'];if(seconds>7.5)return['Very slow','Read naturally. Do not lengthen ordinary vowels unnecessarily. If stopping on الْعَالَمِينَ, keep the final madd consistently at 2, 4, or 6 counts.','warn'];return['Plausible overall pace','The pace is reasonable for practice. Listen back for the clear lām in الْحَمْدُ and الْعَالَمِينَ, the shaddah in رَبِّ, and the madd in عَا.','good']}}
-function finishRecord(kind,expected,seconds,url){if(kind==='s1'||kind==='s2'){const p=kind;$(p+'Audio').src=url;$(p+'Result').classList.add('show');const sc=recognisedText?similarity(recognisedText,expected):null;$(p+'Words').textContent=sc===null?'Browser did not return text':(sc>=.8?'Matched well':'Needs review');$(p+'Time').textContent=seconds.toFixed(1)+' seconds';const [pace,advice,cls]=stageTiming(kind,seconds);$(p+'Pace').textContent=pace;$(p+'Advice').textContent=advice;if(sc!==null&&sc<.8)setStatus(kind,'Some words were not recognised as expected. Listen and repeat.','bad');else setStatus(kind,'Recording analysed. See the practice result below.',cls)}else{$('surahAudio').src=url;$('surahResult').classList.add('show');const sc=recognisedText?similarity(recognisedText,expected):null;$('surahCheck').textContent=sc===null?'Recording saved. Automatic Arabic word recognition was unavailable.':(sc>=.8?'The recognised words matched well.':'Some recognised words did not match. Please repeat the āyah.');setStatus('surah','Recording saved.','good')}activeRecorder=null;recordingKind=''}
-$('s1Mic').onclick=()=>recordingKind==='s1'?stopRecord('s1'):(!recordingKind&&startRecord('s1',stageTargets.s1));$('s2Mic').onclick=()=>recordingKind==='s2'?stopRecord('s2'):(!recordingKind&&startRecord('s2',stageTargets.s2));$('surahMic').onclick=()=>recordingKind==='surah'?stopRecord('surah'):(!recordingKind&&startRecord('surah',verses[current][0]));
-function renderSurah(){$('arabic').textContent=verses[current][0];$('meaning').textContent=verses[current][1];$('count').textContent='Āyah '+(current+1)+' of 7';$('fill').style.width=((current+1)/7*100)+'%';$('prev').disabled=current===0;$('next').disabled=current===6;$('surahResult').classList.remove('show');setStatus('surah','Press the microphone and read the displayed āyah.')} $('prev').onclick=()=>{if(current>0){current--;renderSurah()}};$('next').onclick=()=>{if(current<6){current++;renderSurah()}};renderSurah();
+const stages=[
+{
+ label:'1 • Bismillah',
+ title:'STAGE 1 • BISMILLAH',
+ text:'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ',
+ meaning:'In the name of Allah, the Most Compassionate, the Most Merciful.',
+ min:2.2,max:7.0,
+ focus:[
+  '<b>اللَّهِ</b>: keep the lām of the name of Allah light because it is preceded by kasrah.',
+  '<b>الرَّحْمَٰنِ</b>: the lām of ال is assimilated into <b>رّ</b>; give the rā its shaddah and keep the natural madd in <b>مَٰ</b> about two counts.',
+  '<b>الرَّحِيمِ</b>: give <b>رّ</b> its shaddah and keep the natural madd in <b>حِي</b> about two counts.'
+ ],
+ fast:'Your Bismillah was very short. A madd or shaddah may have been shortened. Repeat more slowly, especially الرَّحْمَٰنِ and الرَّحِيمِ.',
+ slow:'Read naturally without over-stretching ordinary vowels.',
+ ok:'The overall pace is reasonable. Listen back for the two rā shaddahs and the natural madds.'
+},
+{
+ label:'2 • Al-ḥamdu lillāh',
+ title:'STAGE 2 • ĀYAH 2',
+ text:'الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ',
+ meaning:'All praise is for Allah, Lord of all worlds.',
+ min:2.0,max:7.5,
+ focus:[
+  '<b>الْحَمْدُ</b>: pronounce the lām of ال clearly; ḥā is a moon letter.',
+  '<b>لِلَّهِ</b>: keep the lām of Allah light because it is preceded by kasrah.',
+  '<b>رَبِّ</b>: give the <b>بّ</b> its shaddah; do not read it as a single bā.',
+  '<b>الْعَالَمِينَ</b>: keep the madd in <b>عَا</b> about two counts. If stopping at the end, the final madd may be 2, 4, or 6 counts.'
+ ],
+ fast:'This āyah was very short. Check the shaddah in رَبِّ and do not shorten عَا in الْعَالَمِينَ.',
+ slow:'Read naturally. Do not lengthen ordinary vowels unnecessarily.',
+ ok:'The overall pace is reasonable. Listen for the clear lām, the shaddah in رَبِّ, and the madd in الْعَالَمِينَ.'
+},
+{
+ label:'3 • Ar-Raḥmān',
+ title:'STAGE 3 • ĀYAH 3',
+ text:'الرَّحْمَٰنِ الرَّحِيمِ',
+ meaning:'The Most Compassionate, the Most Merciful.',
+ min:1.4,max:5.5,
+ focus:[
+  'In both words, the lām of ال is assimilated into <b>رّ</b>; the rā must carry a clear shaddah.',
+  '<b>الرَّحْمَٰنِ</b>: keep the madd in <b>مَٰ</b> about two counts.',
+  '<b>الرَّحِيمِ</b>: keep the madd in <b>حِي</b> about two counts. If stopping here, the final madd may be 2, 4, or 6 counts.'
+ ],
+ fast:'The āyah was very short. One or both natural madds may have been shortened.',
+ slow:'Keep the two natural madds controlled and avoid unnecessary stretching.',
+ ok:'The overall pace is reasonable. Check both rā shaddahs and both long vowels.'
+},
+{
+ label:'4 • Māliki',
+ title:'STAGE 4 • ĀYAH 4',
+ text:'مَالِكِ يَوْمِ الدِّينِ',
+ meaning:'Master of the Day of Judgement.',
+ min:1.7,max:6.0,
+ focus:[
+  '<b>مَالِكِ</b>: keep the initial <b>مَا</b> as a natural madd of about two counts.',
+  '<b>يَوْمِ</b>: pronounce the yā and waw naturally; do not turn it into an unnecessary long madd while continuing.',
+  '<b>الدِّينِ</b>: the lām of ال is assimilated into <b>دّ</b>; give the dāl its shaddah. The <b>دِي</b> has a natural madd; if stopping at the end, it may be 2, 4, or 6 counts.'
+ ],
+ fast:'The āyah was very short. Check مَا and the shaddah in الدِّينِ.',
+ slow:'Avoid over-lengthening يَوْمِ or ordinary short vowels.',
+ ok:'The overall pace is reasonable. Listen for مَا and the doubled dāl in الدِّينِ.'
+},
+{
+ label:'5 • Iyyāka',
+ title:'STAGE 5 • ĀYAH 5',
+ text:'إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ',
+ meaning:'You alone we worship, and You alone we ask for help.',
+ min:2.6,max:9.5,
+ focus:[
+  'In both occurrences of <b>إِيَّاكَ</b>, give the yā its shaddah and keep the long <b>يَّا</b> sound controlled at about two counts.',
+  '<b>نَعْبُدُ</b>: keep the ʿayn distinct; do not replace it with a plain vowel.',
+  '<b>نَسْتَعِينُ</b>: keep the natural madd in <b>عِي</b> about two counts. If stopping at the end, the final madd may be 2, 4, or 6 counts.'
+ ],
+ fast:'The āyah was very short. Check both إِيَّاكَ phrases and the madd in نَسْتَعِينُ.',
+ slow:'Keep a steady rhythm and avoid stretching short vowels between the key madds.',
+ ok:'The overall pace is reasonable. Listen for both yā shaddahs and the long vowel in نَسْتَعِينُ.'
+},
+{
+ label:'6 • Ihdinā',
+ title:'STAGE 6 • ĀYAH 6',
+ text:'اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ',
+ meaning:'Guide us along the Straight Path.',
+ min:2.0,max:7.5,
+ focus:[
+  '<b>اهْدِنَا</b>: keep the final <b>نَا</b> as a natural madd of about two counts.',
+  '<b>الصِّرَاطَ</b>: the lām of ال is assimilated into <b>صّ</b>; give ṣād its shaddah and keep <b>رَا</b> about two counts.',
+  '<b>الْمُسْتَقِيمَ</b>: the lām of ال is pronounced clearly because mīm is a moon letter. Keep <b>قِي</b> about two counts; if stopping at the end, the final madd may be 2, 4, or 6 counts.'
+ ],
+ fast:'The āyah was very short. Check نَا, the ṣād shaddah, and the long vowels in الصِّرَاطَ and الْمُسْتَقِيمَ.',
+ slow:'Keep the heavy ṣād clear without slowing the entire āyah excessively.',
+ ok:'The overall pace is reasonable. Listen for the ṣād shaddah and the main natural madds.'
+},
+{
+ label:'7 • Ṣirāṭa alladhīna',
+ title:'STAGE 7 • ĀYAH 7',
+ text:'صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ',
+ meaning:'The path of those You have blessed—not those who earned anger, nor those who went astray.',
+ min:5.0,max:17.0,
+ focus:[
+  '<b>صِرَاطَ</b>: keep <b>رَا</b> as a natural madd of about two counts.',
+  '<b>الَّذِينَ</b>: give the lām its shaddah and keep <b>ذِي</b> about two counts.',
+  '<b>الْمَغْضُوبِ</b>: pronounce the lām of ال clearly; keep ḍād heavy and the <b>ضُو</b> madd about two counts.',
+  '<b>وَلَا</b>: keep <b>لَا</b> about two counts.',
+  '<b>الضَّالِّينَ</b>: the lām of ال is assimilated into <b>ضّ</b>. The long <b>ضَا</b> before the doubled lām is madd lāzim kalimī muthaqqal and is held for six counts. Give the lām its shaddah clearly. If stopping at the end, the final <b>لِينْ</b> may be 2, 4, or 6 counts.'
+ ],
+ fast:'The final āyah was very short. Pay special attention to the six-count madd in الضَّالِّينَ and do not rush the shaddahs.',
+ slow:'Keep the six-count madd in الضَّالِّينَ distinct, but avoid over-stretching unrelated vowels elsewhere.',
+ ok:'The overall pace is reasonable. Listen especially for the six-count madd and the doubled letters in الضَّالِّينَ.'
+}
+];
+const $=id=>document.getElementById(id);const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let current=0,recording=false,mediaRecorder=null,mediaStream=null,chunks=[],recognition=null,recognisedText='',startedAt=0,lastUrl='';
+function buildButtons(){const g=$('stageGrid');g.innerHTML='';stages.forEach((s,i)=>{const b=document.createElement('button');b.className='stagebtn'+(i===current?' active':'');b.textContent=s.label;b.onclick=()=>selectStage(i);g.appendChild(b)});const full=document.createElement('button');full.className='stagebtn full';full.textContent='View Full Sūrat al-Fātiḥah';full.onclick=showFull;g.appendChild(full)}
+function selectStage(i){current=i;$('fullView').classList.remove('show');$('practiceView').style.display='block';render();window.scrollTo({top:0,behavior:'smooth'})}
+function render(){const s=stages[current];buildButtons();$('badge').textContent=s.title;$('arabic').textContent=s.text;$('meaning').textContent=s.meaning;$('focusList').innerHTML=s.focus.map(x=>'<li>'+x+'</li>').join('');$('result').classList.remove('show');setStatus('Press the green microphone, recite the displayed āyah, then press again to stop.');$('prev').disabled=current===0;$('next').disabled=current===stages.length-1;$('next').textContent=current===stages.length-1?'Completed':'Next āyah →'}
+function showFull(){if(recording)stopRecording();$('practiceView').style.display='none';const v=$('fullView');v.innerHTML='<span class="badge">FULL SŪRAT AL-FĀTIḤAH</span>'+stages.map((s,i)=>'<div class="verseCard"><div class="verseNo">Āyah '+(i+1)+'</div><div class="verseText">'+s.text+'</div><div class="meaning">'+s.meaning+'</div></div>').join('')+'<button id="returnPractice" class="returnBtn">Return to Practice</button>';v.classList.add('show');buildButtons();document.querySelectorAll('.stagebtn').forEach(b=>b.classList.remove('active'));document.querySelector('.stagebtn.full').classList.add('active');$('returnPractice').onclick=()=>selectStage(current);window.scrollTo({top:0,behavior:'smooth'})}
+function setStatus(t,c=''){$('status').textContent=t;$('status').className='status '+c}
+function norm(s){return(s||'').normalize('NFD').replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g,'').replace(/[إأآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[^\u0621-\u063A\u0641-\u064A ]/g,' ').replace(/\s+/g,' ').trim()}
+function similarity(a,b){const x=norm(a).split(' ').filter(Boolean),y=norm(b).split(' ').filter(Boolean);if(!y.length)return 0;let n=0;y.forEach((w,j)=>{if(x[j]===w)n++});return n/y.length}
+function startRecognition(expected){recognisedText='';if(!SR)return;try{recognition=new SR();recognition.lang='ar-SA';recognition.interimResults=false;recognition.continuous=false;recognition.maxAlternatives=5;recognition.onresult=e=>{let best='',bestScore=-1;for(let n=0;n<e.results[0].length;n++){const t=e.results[0][n].transcript,sc=similarity(t,expected);if(sc>bestScore){bestScore=sc;best=t}}recognisedText=best};recognition.onerror=()=>{};recognition.start()}catch(e){recognition=null}}
+function chooseMime(){if(!window.MediaRecorder)return'';for(const t of['audio/webm;codecs=opus','audio/webm','audio/mp4','audio/ogg;codecs=opus']){if(MediaRecorder.isTypeSupported&&MediaRecorder.isTypeSupported(t))return t}return''}
+async function startRecording(){const s=stages[current];if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setStatus('Microphone access is unavailable. Open this HTTPS site in Google Chrome.','bad');return}if(!window.MediaRecorder){setStatus('This browser cannot make an in-page recording.','bad');return}try{mediaStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}});const mime=chooseMime();mediaRecorder=mime?new MediaRecorder(mediaStream,{mimeType:mime}):new MediaRecorder(mediaStream);chunks=[];startedAt=performance.now();mediaRecorder.ondataavailable=e=>{if(e.data&&e.data.size)chunks.push(e.data)};mediaRecorder.onstop=()=>{const seconds=(performance.now()-startedAt)/1000;const blob=new Blob(chunks,{type:mediaRecorder.mimeType||mime||'audio/webm'});if(lastUrl)URL.revokeObjectURL(lastUrl);lastUrl=URL.createObjectURL(blob);$('audio').src=lastUrl;$('result').classList.add('show');if(mediaStream){mediaStream.getTracks().forEach(t=>t.stop());mediaStream=null}finishAnalysis(seconds)};mediaRecorder.start();recording=true;$('mic').classList.add('on');$('hint').textContent='Recording… press again to stop';setStatus('Listening… Recite naturally.','listen');startRecognition(s.text)}catch(e){setStatus(e&&e.name==='NotAllowedError'?'Microphone permission was denied. Allow microphone access in Chrome settings and try again.':'The microphone could not start.','bad')}}
+function stopRecording(){if(!recording)return;recording=false;try{if(recognition)recognition.stop()}catch(e){}if(mediaRecorder&&mediaRecorder.state!=='inactive')mediaRecorder.stop();$('mic').classList.remove('on');$('hint').textContent='Press once to record • Press again to stop'}
+function finishAnalysis(seconds){const s=stages[current];const sc=recognisedText?similarity(recognisedText,s.text):null;$('wordResult').textContent=sc===null?'Browser did not return text':(sc>=.8?'Matched well':'Needs review');$('timeResult').textContent=seconds.toFixed(1)+' seconds';let pace,advice,cls;if(seconds<s.min){pace='Very fast';advice=s.fast;cls='warn'}else if(seconds>s.max){pace='Very slow';advice=s.slow;cls='warn'}else{pace='Plausible overall pace';advice=s.ok;cls='good'}$('paceResult').textContent=pace;$('advice').textContent=advice;if(sc!==null&&sc<.8)setStatus('Some words were not recognised as expected. Listen to your recording and repeat.','bad');else setStatus('Recording analysed. See the practice result below.',cls)}
+$('mic').onclick=()=>recording?stopRecording():startRecording();$('prev').onclick=()=>{if(recording)stopRecording();if(current>0)selectStage(current-1)};$('next').onclick=()=>{if(recording)stopRecording();if(current<stages.length-1)selectStage(current+1)};render();
 </script>
 </main></body></html>
