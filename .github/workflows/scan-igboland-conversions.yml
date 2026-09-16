@@ -1,0 +1,28 @@
+name: Scan Igboland Conversion Reports
+on:
+  schedule:
+    - cron: '15 6 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Scan public news reports
+        run: python igboland/automation/update_candidates.py
+      - name: Commit updated candidate queue
+        run: |
+          git config user.name "igboland-news-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add igboland/data/candidates.json
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Daily Igboland conversion report scan"
+            git push
+          fi
