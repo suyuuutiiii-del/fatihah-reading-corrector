@@ -1,0 +1,31 @@
+{
+  "updated_at": "2026-09-16T23:00:00Z",
+  "stories": [
+    {
+      "id": "isa-okonkwo-enugu",
+      "name": "Isa Okonkwo",
+      "state": "Enugu",
+      "town": "Nkanu West",
+      "status": "verified-public-interview",
+      "profession": "Education consultant; proprietor of Dar ibn Taimiyyah Islamic Homeschool",
+      "summary": "In a 2024 interview with The PUNCH, Isa Okonkwo publicly described growing up in an Igbo family in Nkanu West, researching Islam as a teenager, accepting Islam by personal conviction, and later attending an Islamic school in Afikpo, Ebonyi State.",
+      "source_title": "Hoarding Sallah meat from neighbours sinful – Igbo Islamic cleric",
+      "source_url": "https://punchng.com/hoarding-sallah-meat-from-neighbours-sinful-igbo-islamic-cleric/",
+      "source_date": "2024-06-15"
+    }
+  ],
+  "research": [
+    {
+      "title": "Being Igbo and Muslim: The Igbo of South-Eastern Nigeria and Conversions to Islam, 1930s to Recent Times",
+      "publisher": "The Journal of African History / Cambridge University Press",
+      "year": "2010",
+      "url": "https://www.cambridge.org/core/journals/journal-of-african-history/article/abs/being-igbo-and-muslim-the-igbo-of-southeastern-nigeria-and-conversions-to-islam-1930s-to-recent-times/3E2664245EB99C9E08C0135DD0B58785"
+    },
+    {
+      "title": "The Stages of Igbo Conversion to Islam: An Empirical Study",
+      "publisher": "Review of Religious Research",
+      "year": "2020",
+      "url": "https://journals.sagepub.com/doi/10.1007/s13644-020-00402-5"
+    }
+  ]
+}
