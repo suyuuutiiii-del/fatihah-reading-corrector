@@ -1,0 +1,9 @@
+{
+  "name":"AL-BUSHRA — The Good News of the Ummah",
+  "short_name":"AL-BUSHRA",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#fbf8ef",
+  "theme_color":"#0b5a3c",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
