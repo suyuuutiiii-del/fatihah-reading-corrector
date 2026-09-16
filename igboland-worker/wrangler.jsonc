@@ -2,5 +2,5 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "islam-in-igboland",
   "compatibility_date": "2026-09-16",
-  "assets": { "directory": "." }
+  "assets": { "directory": "../igboland" }
 }
