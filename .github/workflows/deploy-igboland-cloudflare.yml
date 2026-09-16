@@ -3,7 +3,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'igboland/**'
+      - 'igboland/index.html'
       - 'igboland-worker/**'
       - '.github/workflows/deploy-igboland-cloudflare.yml'
   workflow_dispatch:
