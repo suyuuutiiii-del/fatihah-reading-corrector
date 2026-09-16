@@ -1,1 +1,36 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Islam in Igboland</title><meta http-equiv="refresh" content="0; url=./igboland/"><script>location.replace('./igboland/');</script></head><body style="font-family:Arial,sans-serif;padding:24px"><h2>Islam in Igboland</h2><p>Opening the app…</p><p><a href="./igboland/">Tap here if it does not open automatically</a></p></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Islam in Igboland</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f4f8f4;color:#17321f}header{background:#0f5132;color:white;padding:20px}main{max-width:700px;margin:auto;padding:15px}.card{background:white;border:1px solid #dbe6dc;border-radius:12px;padding:14px;margin:12px 0}.note{background:#fff7da;border:1px solid #ead58d;border-radius:10px;padding:10px;margin-bottom:15px}.btn{display:inline-block;background:#0f5132;color:white;border:0;border-radius:9px;padding:10px 12px;text-decoration:none;margin-top:7px}input,select,textarea{width:100%;box-sizing:border-box;padding:10px;margin:5px 0 10px;border:1px solid #cdd8cf;border-radius:8px}textarea{min-height:90px}.small{font-size:12px;color:#68756d}.badge{display:inline-block;background:#fff1bf;color:#725600;border-radius:20px;padding:4px 8px;font-size:11px;font-weight:bold}#formBox{display:none;background:white;border:1px solid #dbe6dc;border-radius:12px;padding:14px;margin-top:15px}h1{margin:0 0 5px;font-size:22px}h2{font-size:18px}</style>
+</head>
+<body>
+<header><h1>Islam in Igboland</h1><div>New Muslim stories • verified sources • respectful da'wah</div></header>
+<main>
+<div class="note"><b>Important:</b> publish only real conversion stories supported by a public source or shared with the person's permission.</div>
+<button class="btn" onclick="showForm()">+ Add a story</button>
+<div id="formBox">
+<h2>Add a New Muslim Story</h2>
+<label>Name</label><input id="name">
+<label>State</label><select id="state"><option>Abia</option><option>Anambra</option><option>Ebonyi</option><option>Enugu</option><option>Imo</option><option>Delta</option><option>Rivers</option><option>Other</option></select>
+<label>Town</label><input id="town">
+<label>Short story</label><textarea id="story"></textarea>
+<label>Source link</label><input id="source" placeholder="https://...">
+<button class="btn" onclick="saveStory()">Save</button> <button class="btn" onclick="hideForm()">Cancel</button>
+</div>
+<h2>Conversion Stories</h2>
+<div id="stories"></div>
+<div class="card"><span class="badge">DEMO — NOT A REAL CASE</span><h3>Example story</h3><div class="small">Enugu • Example town</div><p>This sample shows how a verified conversion story will appear. Replace it with a real, sourced case before public use.</p></div>
+</main>
+<script>
+function showForm(){document.getElementById('formBox').style.display='block'}
+function hideForm(){document.getElementById('formBox').style.display='none'}
+function safe(t){var d=document.createElement('div');d.appendChild(document.createTextNode(t||''));return d.innerHTML}
+function load(){var a=[];try{a=JSON.parse(localStorage.getItem('igboStories')||'[]')}catch(e){}var out='';for(var i=0;i<a.length;i++){var s=a[i];out+='<div class="card"><b>'+safe(s.name)+'</b><div class="small">'+safe(s.state)+' • '+safe(s.town)+'</div><p>'+safe(s.story)+'</p>'+(s.source?'<a class="btn" target="_blank" href="'+safe(s.source)+'">Open source</a>':'')+'</div>'}document.getElementById('stories').innerHTML=out}
+function saveStory(){var n=document.getElementById('name').value.trim(),t=document.getElementById('town').value.trim(),st=document.getElementById('story').value.trim();if(!n||!t||!st){alert('Please enter the name, town and story.');return}var a=[];try{a=JSON.parse(localStorage.getItem('igboStories')||'[]')}catch(e){}a.unshift({name:n,state:document.getElementById('state').value,town:t,story:st,source:document.getElementById('source').value.trim()});localStorage.setItem('igboStories',JSON.stringify(a));document.getElementById('name').value='';document.getElementById('town').value='';document.getElementById('story').value='';document.getElementById('source').value='';hideForm();load()}
+load();
+</script>
+</body></html>
