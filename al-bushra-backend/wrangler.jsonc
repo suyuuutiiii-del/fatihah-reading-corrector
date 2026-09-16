@@ -1,13 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "al-bushra-community",
+  "name": "albushra-community",
   "main": "worker.js",
-  "compatibility_date": "2026-09-16",
-  "d1_databases": [
-    {
-      "binding": "DB",
-      "database_name": "al-bushra-community-db",
-      "database_id": "00000000-0000-0000-0000-000000000000"
-    }
-  ]
+  "compatibility_date": "2026-09-16"
 }
