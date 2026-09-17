@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS comments (
   story_id TEXT NOT NULL,
   name TEXT NOT NULL,
   text TEXT NOT NULL,
-  status TEXT NOT NULL DEFAULT 'approved',
+  status TEXT NOT NULL DEFAULT 'pending',
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
