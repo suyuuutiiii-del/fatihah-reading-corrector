@@ -13,7 +13,7 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
 
     try {
-      // Public comments: readers see only approved comments.
+      // Public comments: readers see only comments explicitly approved by the admin.
       if (url.pathname === '/api/comments' && request.method === 'GET') {
         const storyId = (url.searchParams.get('story_id') || '').trim();
         if (!storyId) return json({ error: 'story_id required' }, 400, cors);
@@ -23,7 +23,7 @@ export default {
         return json({ comments: results }, 200, cors);
       }
 
-      // Public comment submission: basic automatic adab/spam gate, then publish.
+      // Public comment submission: automatic adab/spam gate first, then hold for admin review.
       if (url.pathname === '/api/comments' && request.method === 'POST') {
         const body = await request.json();
         const storyId = clean(body.story_id, 100);
@@ -36,9 +36,9 @@ export default {
 
         const id = crypto.randomUUID();
         await env.DB.prepare(
-          `INSERT INTO comments (id, story_id, name, text, status, created_at) VALUES (?, ?, ?, ?, 'approved', datetime('now'))`
+          `INSERT INTO comments (id, story_id, name, text, status, created_at) VALUES (?, ?, ?, ?, 'pending', datetime('now'))`
         ).bind(id, storyId, name, text).run();
-        return json({ ok: true, id, status: 'approved' }, 201, cors);
+        return json({ ok: true, id, status: 'pending', message: 'Comment received for moderation.' }, 201, cors);
       }
 
       // Public story / achiever / improvement submissions always wait for admin review.
@@ -70,7 +70,7 @@ export default {
           if (status !== 'all') { where.push('status = ?'); values.push(status); }
           if (storyId) { where.push('story_id = ?'); values.push(storyId); }
           if (where.length) sql += ' WHERE ' + where.join(' AND ');
-          sql += ' ORDER BY created_at DESC LIMIT 300';
+          sql += ` ORDER BY CASE status WHEN 'pending' THEN 0 WHEN 'approved' THEN 1 ELSE 2 END, created_at DESC LIMIT 300`;
           const { results } = await env.DB.prepare(sql).bind(...values).all();
           return json({ comments: results }, 200, cors);
         }
@@ -80,7 +80,7 @@ export default {
           let sql = `SELECT id, type, title, details, status, created_at FROM submissions`;
           const values = [];
           if (status !== 'all') { sql += ' WHERE status = ?'; values.push(status); }
-          sql += ' ORDER BY created_at DESC LIMIT 300';
+          sql += ` ORDER BY CASE status WHEN 'pending' THEN 0 WHEN 'approved' THEN 1 WHEN 'hidden' THEN 2 ELSE 3 END, created_at DESC LIMIT 300`;
           const { results } = await env.DB.prepare(sql).bind(...values).all();
           return json({ submissions: results }, 200, cors);
         }
@@ -127,7 +127,7 @@ export default {
       }
 
       if (url.pathname === '/api/health') {
-        return json({ ok: true, service: 'AL-BUSHRA community backend', moderation: 'enabled' }, 200, cors);
+        return json({ ok: true, service: 'AL-BUSHRA community backend', moderation: 'admin-approval-required' }, 200, cors);
       }
 
       return json({ error: 'Not found' }, 404, cors);
