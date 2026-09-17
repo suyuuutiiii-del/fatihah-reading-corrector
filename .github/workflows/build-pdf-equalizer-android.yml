@@ -9,7 +9,7 @@ on:
       - '.github/workflows/build-pdf-equalizer-android.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -49,11 +49,14 @@ jobs:
       - name: Build debug APK and release bundle
         run: gradle -p pdf-page-equalizer/android clean assembleDebug bundleRelease --stacktrace
 
+      - name: Prepare public APK filename
+        run: cp pdf-page-equalizer/android/app/build/outputs/apk/debug/app-debug.apk PDF-Page-Equalizer-v1-test.apk
+
       - name: Upload installable test APK
         uses: actions/upload-artifact@v4
         with:
           name: PDF-Page-Equalizer-debug-APK
-          path: pdf-page-equalizer/android/app/build/outputs/apk/debug/app-debug.apk
+          path: PDF-Page-Equalizer-v1-test.apk
           if-no-files-found: error
 
       - name: Upload unsigned Play bundle
@@ -62,3 +65,15 @@ jobs:
           name: PDF-Page-Equalizer-release-AAB-unsigned
           path: pdf-page-equalizer/android/app/build/outputs/bundle/release/app-release.aab
           if-no-files-found: error
+
+      - name: Publish public test APK release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: pdf-page-equalizer-v1-test
+          name: PDF Page Equalizer v1 Test
+          prerelease: true
+          make_latest: false
+          body: |
+            Public Android test build of PDF Page Equalizer by Islamic Curriculum Trust Foundation.
+            Download PDF-Page-Equalizer-v1-test.apk below and install it on an Android phone for testing.
+          files: PDF-Page-Equalizer-v1-test.apk
