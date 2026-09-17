@@ -1,13 +1,25 @@
 # AL-BUSHRA Community Backend
 
-This module is intentionally separate from the working AL-BUSHRA news page.
+This module powers shared reader comments, good-news submissions, and secure administrator moderation for AL-BUSHRA.
 
-## Purpose
-- Shared reader comments across phones and browsers
-- Shared good-news / achiever submissions
-- Basic Islamic-adab moderation gate
-- Authenticated admin moderation
-- Safe separation from the main news site
+## Current live status
+The public Worker URL currently still serves the original `Hello World!` starter Worker. The code in this folder is the finished replacement and must be deployed once before comments and moderation become live.
+
+## What deployment now provisions automatically
+The deployment configuration declares a Cloudflare D1 binding named `DB` with database name `al-bushra-community-db`. With current Wrangler/Cloudflare automatic provisioning, Cloudflare can create and bind the D1 database when the project is deployed.
+
+`package.json` runs `schema.sql` against the remote `DB` before deploying the Worker, creating the required tables and indexes.
+
+## One-click deployment
+Open:
+
+`https://deploy.workers.cloudflare.com/?url=https://github.com/suyuuutiiii-del/fatihah-reading-corrector/tree/main/al-bushra-backend`
+
+During setup, keep the Worker name `albushra-community` and provide the requested private secret:
+
+`ADMIN_TOKEN`
+
+Choose a long private value known only to the AL-BUSHRA administrator. Never place that value in GitHub or in the public webpage.
 
 ## Public endpoints
 - `GET /api/health`
@@ -15,12 +27,12 @@ This module is intentionally separate from the working AL-BUSHRA news page.
 - `POST /api/comments`
 - `POST /api/submissions`
 
-Public readers see only comments whose status is `approved`. New story / achiever submissions enter the database as `pending`.
+Public readers see only comments whose status is `approved`. New comments and new story/achiever submissions enter the database as `pending` and wait for admin review.
 
 ## Private admin endpoints
-All `/api/admin/*` routes require a Cloudflare Worker secret named `ADMIN_TOKEN`.
+All `/api/admin/*` routes require `ADMIN_TOKEN`.
 
-Send the token as either:
+Send it as:
 - `Authorization: Bearer <token>` (preferred), or
 - `X-Admin-Token: <token>`
 
@@ -33,42 +45,22 @@ Available routes:
 - `PATCH /api/admin/submissions/:id` with `{ "status": "pending" | "approved" | "hidden" | "rejected" }`
 - `DELETE /api/admin/submissions/:id`
 
-## Required private secret
-In the Cloudflare dashboard for Worker `albushra-community`, create an encrypted secret:
-
-`ADMIN_TOKEN`
-
-Use a long private value. Never put this value into GitHub, `worker.js`, `wrangler.jsonc`, or the public HTML page.
-
-The admin page `al-bushra-admin.html` asks for the token and keeps it only in the current browser session (`sessionStorage`).
-
-## Cloudflare deployment
-Expected Worker name: `albushra-community`
-Expected D1 database name: `al-bushra-community-db`
-Expected D1 binding name: `DB`
-
-Existing deployment helper:
-`https://deploy.workers.cloudflare.com/?url=https://github.com/suyuuutiiii-del/fatihah-reading-corrector/tree/main/al-bushra-backend`
-
-IMPORTANT: preserve the existing D1 binding named `DB` when redeploying. The live Worker already contains reader comments/submissions, so do not replace or delete its database.
-
 ## Database
-The schema creates:
-- `comments` with statuses such as `approved`, `hidden`, `pending`
-- `submissions` with statuses such as `pending`, `approved`, `hidden`, `rejected`
+`schema.sql` creates:
+- `comments`: `pending`, `approved`, `hidden`
+- `submissions`: `pending`, `approved`, `hidden`, `rejected`
 
-No schema migration is required for the new moderation controls because the existing tables already have a `status` column.
+The default for new comments is `pending`.
 
 ## Admin page
-Open:
-`al-bushra-admin.html`
+Open `al-bushra-admin.html` after deployment. Enter the same private `ADMIN_TOKEN`. The token is kept only in that browser session.
 
-After the updated Worker is deployed and `ADMIN_TOKEN` is configured, the page can genuinely:
-- approve a comment
-- hide a comment from the public page
+The admin page can:
+- show pending comments first
+- approve a comment so it becomes public
+- hide a comment
 - permanently delete a comment
-- approve / hide / reject reader submissions
-- permanently delete a submission
+- approve, hide, reject, or delete reader submissions
 
 ## Security principle
-The admin token must remain a Cloudflare secret. The public GitHub repository contains only the code that checks the secret; it never contains the secret itself.
+The admin token must remain a Cloudflare secret. The public repository contains only an example placeholder and code that checks the secret; the real token must never be committed.
