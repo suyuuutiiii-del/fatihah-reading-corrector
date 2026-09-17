@@ -1,0 +1,3 @@
+# Cloudflare will prompt for this secret during deployment.
+# Replace the example with a long private value known only to the AL-BUSHRA administrator.
+ADMIN_TOKEN=replace-with-a-long-private-admin-token
