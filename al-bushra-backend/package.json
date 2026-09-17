@@ -1,12 +1,23 @@
 {
   "name": "al-bushra-community-backend",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.1.0",
   "scripts": {
-    "deploy": "wrangler deploy",
+    "db:setup": "wrangler d1 execute DB --remote --file=./schema.sql",
+    "deploy": "npm run db:setup && wrangler deploy",
     "dev": "wrangler dev"
   },
   "devDependencies": {
-    "wrangler": "^4.0.0"
+    "wrangler": "^4.45.0"
+  },
+  "cloudflare": {
+    "bindings": {
+      "DB": {
+        "description": "Persistent AL-BUSHRA comments and reader-submission database."
+      },
+      "ADMIN_TOKEN": {
+        "description": "Enter a long private token that only the AL-BUSHRA administrator knows. It protects Approve, Hide, Reject and Delete actions."
+      }
+    }
   }
 }
