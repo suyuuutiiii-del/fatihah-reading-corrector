@@ -1,0 +1,21 @@
+name: Deploy AL-BUSHRA Backend Temporary
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'al-bushra-backend/**'
+      - '.github/workflows/deploy-albushra-temporary.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy AL-BUSHRA Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          wranglerVersion: '4.133.0'
+          workingDirectory: al-bushra-backend
+          command: deploy --temporary
