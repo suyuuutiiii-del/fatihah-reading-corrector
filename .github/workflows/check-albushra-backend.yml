@@ -1,0 +1,19 @@
+name: Check AL-BUSHRA Backend
+on:
+  push:
+    paths:
+      - '.github/workflows/check-albushra-backend.yml'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check public health
+        run: |
+          echo '=== PUBLIC HEALTH ==='
+          curl -sS -i https://albushra-community.suyuuutiiii.workers.dev/api/health || true
+      - name: Check admin configuration without secret
+        run: |
+          echo '=== ADMIN HEALTH WITHOUT TOKEN ==='
+          curl -sS -i https://albushra-community.suyuuutiiii.workers.dev/api/admin/health || true
