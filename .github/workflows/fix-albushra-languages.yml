@@ -1,0 +1,32 @@
+name: Fix AL-BUSHRA Languages
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-albushra-languages.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add unified language controller
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('al-bushra.html')
+          s=p.read_text()
+          tag='<script src="al-bushra-language-fix.js"></script>'
+          if tag not in s:
+              anchor='<script src="al-bushra-audio.js"></script>'
+              s=s.replace(anchor, tag+'\n'+anchor)
+              p.write_text(s)
+          PY
+      - name: Commit
+        run: |
+          git config user.name "AL-BUSHRA Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add al-bushra.html
+          git diff --cached --quiet || git commit -m "Activate AL-BUSHRA five-language selector"
+          git push
