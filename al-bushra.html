@@ -12,7 +12,7 @@ main{width:min(1050px,92%);margin:auto}.hero{margin:24px 0 12px;padding:25px;bor
 </style>
 </head>
 <body>
-<header class="top"><img src="al-bushra/icon.svg" alt="AL-BUSHRA"><div class="brand"><div class="arabic">البُشْرَى</div><h1>AL-BUSHRA</h1><p>The Good News of the Ummah</p></div><div class="topactions"><select id="langSelect" class="langsel" aria-label="Language" onchange="applyLanguage(this.value)"><option value="en">English</option><option value="ar">العربية</option><option value="yo">Yorùbá</option><option value="ha">Hausa</option></select><a id="archiveLink" class="secondary" href="al-bushra-archive.html">Archive</a><a id="installLink" class="secondary" href="install-al-bushra.html">Install App</a><button id="shareBtn" class="primary topshare" onclick="shareSite()">Share AL-BUSHRA</button></div></header>
+<header class="top"><img src="al-bushra/icon.svg" alt="AL-BUSHRA"><div class="brand"><div class="arabic">البُشْرَى</div><h1>AL-BUSHRA</h1><p>The Good News of the Ummah</p></div><div class="topactions"><select id="langSelect" class="langsel" aria-label="Language" onchange="applyLanguage(this.value)"><option value="en">English</option><option value="ar">العربية</option><option value="yo">Yorùbá</option><option value="ha">Hausa</option><option value="ig">Igbo</option></select><a id="archiveLink" class="secondary" href="al-bushra-archive.html">Archive</a><a id="installLink" class="secondary" href="install-al-bushra.html">Install App</a><button id="shareBtn" class="primary topshare" onclick="shareSite()">Share AL-BUSHRA</button></div></header>
 <main>
 <section class="hero"><span id="heroEye" class="eyebrow">TODAY'S VERIFIED EDITION</span><h2 id="heroTitle">Good news that makes the Ummah say Alḥamdulillāh.</h2><p id="heroDesc">Qur’an, Islamic education, Muslim achievers, youth leadership and practical ideas worth copying — with verified sources attached.</p><span class="date">17 September 2026</span></section>
 <nav id="filters" class="chips"></nav>
@@ -58,6 +58,7 @@ renderFilters();renderNews();renderAchievers();renderIdeas();
 const requested=new URLSearchParams(location.search).get('story');if(requested&&stories.some(s=>s.id===requested))setTimeout(()=>openArticle(requested),100);
 </script>
 <script src="al-bushra-i18n.js"></script>
+<script src="al-bushra-igbo.js"></script>
 <script src="al-bushra-audio.js"></script>
 </body>
 </html>
