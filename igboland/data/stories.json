@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-16T23:00:00Z",
+  "updated_at": "2026-09-17T07:30:00Z",
   "stories": [
     {
       "id": "isa-okonkwo-enugu",
@@ -12,6 +12,18 @@
       "source_title": "Hoarding Sallah meat from neighbours sinful – Igbo Islamic cleric",
       "source_url": "https://punchng.com/hoarding-sallah-meat-from-neighbours-sinful-igbo-islamic-cleric/",
       "source_date": "2024-06-15"
+    },
+    {
+      "id": "zubair-ugwu-enugu",
+      "name": "Zubair Ugwu",
+      "state": "Enugu",
+      "town": "Alor-Agu, Igbo-Eze South",
+      "status": "verified-public-interview",
+      "profession": "Not stated in the cited report",
+      "summary": "In a PREMIUM TIMES interview published in 2021, Zubair Ugwu publicly identified as an Igbo Muslim from Alor-Agu in Igbo-Eze South, Enugu State. The report states that he attended schools outside the South-East where he converted to Islam; Ugwu then personally described returning to the East and being labelled a saboteur because he identified as Muslim.",
+      "source_title": "Inside the world of Igbo Muslims in Nigeria’s South-east region",
+      "source_url": "https://muslimnews.com.ng/2021/09/23/inside-the-world-of-igbo-muslims-in-nigerias-south-east-region/",
+      "source_date": "2021-09-23"
     }
   ],
   "research": [
