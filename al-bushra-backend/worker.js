@@ -13,6 +13,7 @@ export default {
     if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
 
     try {
+      await ensureSchema(env.DB);
       // Public comments: readers see only comments explicitly approved by the admin.
       if (url.pathname === '/api/comments' && request.method === 'GET') {
         const storyId = (url.searchParams.get('story_id') || '').trim();
@@ -177,4 +178,30 @@ function changed(result) {
 
 function json(data, status, headers) {
   return new Response(JSON.stringify(data), { status, headers });
+}
+
+
+async function ensureSchema(db) {
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS comments (
+      id TEXT PRIMARY KEY,
+      story_id TEXT NOT NULL,
+      name TEXT NOT NULL,
+      text TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_comments_story_status_created
+    ON comments(story_id, status, created_at DESC);
+    CREATE TABLE IF NOT EXISTS submissions (
+      id TEXT PRIMARY KEY,
+      type TEXT NOT NULL,
+      title TEXT NOT NULL,
+      details TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_submissions_status_created
+    ON submissions(status, created_at DESC);
+  `);
 }
