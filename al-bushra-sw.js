@@ -1,4 +1,4 @@
-const CACHE='al-bushra-v2-languages';
+const CACHE='al-bushra-v3-moderation';
 const CORE=['al-bushra.html','al-bushra.webmanifest','al-bushra/icon.svg','al-bushra-archive.html','al-bushra-i18n.js','al-bushra-igbo.js','al-bushra-language-fix.js','al-bushra-audio.js'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).catch(()=>{}));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});
