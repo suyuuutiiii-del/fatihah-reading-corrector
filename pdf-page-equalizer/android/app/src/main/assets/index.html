@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>PDF Page Equalizer</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#687189;--line:#dfe5ef;--accent:#2457d6;--good:#12824c;--warn:#9a6200}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:860px;margin:auto;padding:16px 14px 34px}.hero{background:linear-gradient(135deg,#2457d6,#123a9e);color:#fff;border-radius:20px;padding:22px 18px;box-shadow:0 10px 30px #2457d622}.hero h1{margin:0 0 7px;font-size:27px}.hero p{margin:0;line-height:1.45}.badge{display:inline-block;margin-top:10px;background:#ffffff24;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:16px;margin-top:14px;box-shadow:0 5px 20px #1720330a}h2{font-size:17px;margin:0 0 12px}.drop{border:2px dashed #b9c6df;border-radius:14px;padding:18px;text-align:center;background:#fbfcff}input[type=file]{max-width:100%;font-size:15px}.filename{margin-top:9px;font-weight:700;word-break:break-word}.hint,.note{font-size:13px;color:var(--muted);line-height:1.45}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{display:flex;flex-direction:column;gap:6px}.field label{font-size:14px;font-weight:750}select,input[type=number]{width:100%;padding:11px;border:1px solid #cbd4e3;border-radius:10px;background:#fff;font-size:15px}.check{display:flex;gap:10px;align-items:flex-start;margin:11px 0}.check input{margin-top:3px;transform:scale(1.15)}.check label{font-size:14px;line-height:1.4}.exact{border:2px solid #2457d6;background:#f3f7ff;border-radius:13px;padding:12px}.exact b{color:#123a9e}
+button{width:100%;border:0;border-radius:12px;padding:14px 16px;font-size:16px;font-weight:800;background:var(--accent);color:#fff;cursor:pointer}button:disabled{opacity:.5}.status{margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:11px;background:#f7f9fc;white-space:pre-wrap}.bar{height:10px;background:#e8edf5;border-radius:99px;overflow:hidden;margin-top:10px}.bar>div{height:100%;width:0;background:var(--accent);transition:width .15s}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.stat{border:1px solid var(--line);border-radius:10px;padding:9px;text-align:center;background:#fbfcff}.stat b{display:block;font-size:17px}.footer{text-align:center;font-size:12px;color:var(--muted);margin-top:18px;line-height:1.5}.warn{color:var(--warn)}
+@media(max-width:600px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr 1fr}.hero h1{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>PDF Page Equalizer</h1>
+    <p>Make every PDF page the same A5 size, visible height, visible width, and margins.</p>
+    <span class="badge">Exact Equal Visible Size</span>
+  </div>
+
+  <div class="card">
+    <h2>1. Select PDF</h2>
+    <div class="drop">
+      <input id="file" type="file" accept="application/pdf,.pdf">
+      <div id="filename" class="filename">No PDF selected yet</div>
+      <div class="hint">Your PDF is processed on this device.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. Settings</h2>
+    <div class="exact">
+      <div class="check" style="margin:0">
+        <input id="exact" type="checkbox" checked>
+        <label for="exact"><b>Exact Equal Visible Size</b> — force each visible page artwork into the same width and height.</label>
+      </div>
+    </div>
+
+    <div class="check">
+      <input id="trim" type="checkbox" checked>
+      <label for="trim">Remove unequal outer white space before equalizing.</label>
+    </div>
+
+    <div class="grid">
+      <div class="field">
+        <label for="split">A4 landscape spread</label>
+        <select id="split">
+          <option value="auto" selected>Auto-detect and split into 2 A5 pages</option>
+          <option value="always">Always split every sheet into 2</option>
+          <option value="never">Do not split</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="order">Split order</label>
+        <select id="order">
+          <option value="right" selected>Right page first, then left</option>
+          <option value="left">Left page first, then right</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="margin">Equal margin (mm)</label>
+        <input id="margin" type="number" min="0" max="12" step="0.5" value="2">
+      </div>
+      <div class="field">
+        <label for="scale">Processing quality</label>
+        <select id="scale">
+          <option value="2">Normal</option>
+          <option value="3" selected>High</option>
+          <option value="4">Print quality</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="threshold">White-space detection</label>
+        <select id="threshold">
+          <option value="248">Gentle</option>
+          <option value="242" selected>Balanced</option>
+          <option value="235">Strong</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="quality">PDF image quality</label>
+        <select id="quality">
+          <option value="0.92">Good — smaller file</option>
+          <option value="0.95" selected>High</option>
+          <option value="0.98">Very high</option>
+        </select>
+      </div>
+    </div>
+    <p class="note"><b>Recommended:</b> Exact Equal Visible Size ON, Trim ON, Auto-split, Right-first, 2 mm margin, High quality.</p>
+  </div>
+
+  <div class="card">
+    <h2>3. Equalize and save</h2>
+    <button id="run" disabled>Create Corrected A5 PDF</button>
+    <div id="status" class="status">Select a PDF to begin.</div>
+    <div class="bar"><div id="bar"></div></div>
+    <div id="stats" class="stats" style="display:none">
+      <div class="stat"><b id="inputPages">—</b><small>input sheets</small></div>
+      <div class="stat"><b id="outputPages">—</b><small>output pages</small></div>
+      <div class="stat"><b>A5</b><small>148 × 210 mm</small></div>
+    </div>
+  </div>
+
+  <div class="footer">Published by Islamic Curriculum Trust Foundation<br>suyuuutiiii@gmail.com</div>
+</div>
+
+<script src="pdf.min.js"></script>
+<script src="pdf-lib.min.js"></script>
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='pdf.worker.min.js';
+const {PDFDocument}=PDFLib;
+const $=id=>document.getElementById(id);
+const file=$('file'),run=$('run'),status=$('status'),bar=$('bar');
+let chosen=null;
+function setStatus(t,p){status.textContent=t;if(typeof p==='number')bar.style.width=Math.max(0,Math.min(100,p))+'%'}
+function readFileBytes(f){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(new Uint8Array(r.result));r.onerror=()=>reject(r.error||new Error('Could not read file'));r.readAsArrayBuffer(f)})}
+function bytesToBase64(bytes){let binary='';const chunk=0x8000;for(let i=0;i<bytes.length;i+=chunk){binary+=String.fromCharCode.apply(null,bytes.subarray(i,Math.min(i+chunk,bytes.length)))}return btoa(binary)}
+file.addEventListener('change',()=>{
+  const f=file.files&&file.files[0];
+  if(!f){chosen=null;run.disabled=true;return}
+  if(!/\.pdf$/i.test(f.name)&&f.type!=='application/pdf'){setStatus('Please choose a PDF file.',0);return}
+  chosen=f;run.disabled=false;$('filename').textContent=f.name;setStatus('Ready. Press “Create Corrected A5 PDF”.',0);
+});
+function mmPt(mm){return mm*72/25.4}
+function visibleBounds(ctx,w,h,threshold){
+  const d=ctx.getImageData(0,0,w,h).data;let minX=w,minY=h,maxX=-1,maxY=-1;
+  const step=Math.max(1,Math.floor(Math.sqrt(w*h/3500000)));
+  for(let y=0;y<h;y+=step){for(let x=0;x<w;x+=step){const i=(y*w+x)*4;if(d[i+3]<16)continue;if(d[i]<threshold||d[i+1]<threshold||d[i+2]<threshold){if(x<minX)minX=x;if(x>maxX)maxX=x;if(y<minY)minY=y;if(y>maxY)maxY=y}}}
+  if(maxX<0)return{x:0,y:0,w,h};
+  const pad=Math.max(3,Math.round(Math.min(w,h)*0.004));
+  minX=Math.max(0,minX-pad);minY=Math.max(0,minY-pad);maxX=Math.min(w-1,maxX+pad);maxY=Math.min(h-1,maxY+pad);
+  return{x:minX,y:minY,w:maxX-minX+1,h:maxY-minY+1};
+}
+function crop(src,b){const c=document.createElement('canvas');c.width=Math.max(1,b.w);c.height=Math.max(1,b.h);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(src,b.x,b.y,b.w,b.h,0,0,c.width,c.height);return c}
+function slice(src,x,y,w,h){const c=document.createElement('canvas');c.width=Math.max(1,Math.round(w));c.height=Math.max(1,Math.round(h));const z=c.getContext('2d');z.fillStyle='#fff';z.fillRect(0,0,c.width,c.height);z.drawImage(src,x,y,w,h,0,0,c.width,c.height);return c}
+function parts(src,mode,order){const ratio=src.width/src.height;const split=mode==='always'||(mode==='auto'&&ratio>1.18);if(!split)return[src];const half=Math.floor(src.width/2),left=slice(src,0,0,half,src.height),right=slice(src,src.width-half,0,half,src.height);return order==='right'?[right,left]:[left,right]}
+async function renderPage(p,scale){const vp=p.getViewport({scale});const c=document.createElement('canvas');c.width=Math.ceil(vp.width);c.height=Math.ceil(vp.height);const x=c.getContext('2d',{alpha:false,willReadFrequently:true});x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);await p.render({canvasContext:x,viewport:vp,background:'white'}).promise;return c}
+run.addEventListener('click',async()=>{
+  if(!chosen)return;run.disabled=true;$('stats').style.display='none';
+  try{
+    setStatus('Reading PDF…',2);
+    const src=await pdfjsLib.getDocument({data:await readFileBytes(chosen)}).promise;$('inputPages').textContent=src.numPages;
+    const out=await PDFDocument.create();let count=0;
+    const targetW=419.528,targetH=595.276,margin=mmPt(Math.max(0,Math.min(12,parseFloat($('margin').value)||0))),innerW=targetW-2*margin,innerH=targetH-2*margin;
+    const scale=parseFloat($('scale').value),threshold=parseInt($('threshold').value,10),trim=$('trim').checked,exact=$('exact').checked,q=parseFloat($('quality').value),splitMode=$('split').value,order=$('order').value;
+    if(innerW<=20||innerH<=20)throw new Error('Margin is too large.');
+    for(let i=1;i<=src.numPages;i++){
+      setStatus(`Processing sheet ${i} of ${src.numPages}…`,5+85*(i-1)/src.numPages);
+      const pg=await src.getPage(i),rendered=await renderPage(pg,scale),pp=parts(rendered,splitMode,order);
+      for(let k=0;k<pp.length;k++){
+        let c=pp[k];if(trim){const b=visibleBounds(c.getContext('2d',{willReadFrequently:true}),c.width,c.height,threshold);c=crop(c,b)}
+        const jpg=c.toDataURL('image/jpeg',q),img=await out.embedJpg(jpg),page=out.addPage([targetW,targetH]);
+        if(exact){page.drawImage(img,{x:margin,y:margin,width:innerW,height:innerH})}else{const s=Math.min(innerW/img.width,innerH/img.height),w=img.width*s,h=img.height*s;page.drawImage(img,{x:(targetW-w)/2,y:(targetH-h)/2,width:w,height:h})}
+        count++;await new Promise(r=>setTimeout(r,0));
+      }
+      setStatus(`Processed sheet ${i} of ${src.numPages}.`,5+85*i/src.numPages);
+    }
+    setStatus('Building corrected PDF…',94);
+    const bytes=await out.save({useObjectStreams:true});
+    const filename=chosen.name.replace(/\.pdf$/i,'')+' - EXACT A5 Equalized.pdf';
+    $('outputPages').textContent=count;$('stats').style.display='grid';
+    if(window.Android&&typeof window.Android.savePdf==='function'){
+      setStatus(`Completed. ${count} A5 pages created.\nChoose where to save the corrected PDF.`,100);
+      window.Android.savePdf(bytesToBase64(bytes),filename);
+    }else{
+      const blob=new Blob([bytes],{type:'application/pdf'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=filename;a.click();setTimeout(()=>URL.revokeObjectURL(url),5000);setStatus(`Completed. ${count} A5 pages created.`,100);
+    }
+  }catch(e){console.error(e);setStatus('Could not process this PDF: '+(e&&e.message?e.message:'Unknown error'),0)}finally{run.disabled=false}
+});
+</script>
+</body>
+</html>
