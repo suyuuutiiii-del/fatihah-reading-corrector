@@ -1,0 +1,42 @@
+name: Update AL-BUSHRA Moderation UI
+on:
+  push:
+    paths:
+      - '.github/workflows/albushra-moderation-ui.yml'
+permissions:
+  contents: write
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch public comment moderation UX
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('al-bushra.html')
+          s=p.read_text()
+          s=s.replace('<button id="postBtn" class="primary">Post Comment</button></form><div id="comments" class="comments"></div>', '<button id="postBtn" class="primary">Post Comment</button><p id="cmsg" class="muted"></p></form><div id="comments" class="comments"></div>')
+          s=s.replace("footer:'Current verified stories first. Sources are checked before publication.',note:''}", "footer:'Current verified stories first. Sources are checked before publication.',commentPending:'JazākAllāhu khayran. Your comment has been received and is awaiting approval.',commentUnavailable:'Comment service is not available yet.',note:''}")
+          s=s.replace("footer:'الأخبار الموثقة الحالية أولاً، ويتم فحص المصادر قبل النشر.',note:'النص التفصيلي للمصدر يبقى بالإنجليزية للحفاظ على الدقة.'}", "footer:'الأخبار الموثقة الحالية أولاً، ويتم فحص المصادر قبل النشر.',commentPending:'جزاكم الله خيراً. تم استلام تعليقكم وهو بانتظار الموافقة.',commentUnavailable:'خدمة التعليقات غير متاحة حالياً.',note:'النص التفصيلي للمصدر يبقى بالإنجليزية للحفاظ على الدقة.'}")
+          s=s.replace("footer:'Ìròyìn tuntun tí a ṣàyẹ̀wò ni a kọ́kọ́ fi hàn.',note:'Àlàyé gígùn ti orísun wà ní Gẹ̀ẹ́sì kí ìtumọ̀ má bà a jẹ́.'}", "footer:'Ìròyìn tuntun tí a ṣàyẹ̀wò ni a kọ́kọ́ fi hàn.',commentPending:'JazākAllāhu khayran. A ti gba àlàyé yín, ó ń dúró de ìfọwọ́sí.',commentUnavailable:'Iṣẹ́ àlàyé kò sí ní báyìí.',note:'Àlàyé gígùn ti orísun wà ní Gẹ̀ẹ́sì kí ìtumọ̀ má bà a jẹ́.'}")
+          s=s.replace("footer:'Sabbin labaran da aka tabbatar suna farko.',note:'Cikakken bayanin majiya yana nan da Turanci domin kiyaye daidaito.'}", "footer:'Sabbin labaran da aka tabbatar suna farko.',commentPending:'JazākAllāhu khayran. An karɓi sharhinku kuma yana jiran amincewa.',commentUnavailable:'Sabis ɗin sharhi baya samuwa yanzu.',note:'Cikakken bayanin majiya yana nan da Turanci domin kiyaye daidaito.'}")
+          s=s.replace("footer:'A na-ebute ozi kachasị ọhụrụ a kwadoro ụzọ.',note:'Nkọwa zuru ezu nke isi mmalite ka dị n’English iji chekwaa izi ezi.'}", "footer:'A na-ebute ozi kachasị ọhụrụ a kwadoro ụzọ.',commentPending:'JazākAllāhu khayran. A nabatara echiche gị ma ọ na-eche nkwado.',commentUnavailable:'Ọrụ echiche adịghị ugbu a.',note:'Nkọwa zuru ezu nke isi mmalite ka dị n’English iji chekwaa izi ezi.'}")
+          old="$('commentForm').onsubmit=async e=>{e.preventDefault();if(!current)return;try{const r=await fetch(`${API}/api/comments`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({story_id:current.id,name:$('cname').value||'Reader',text:$('ctext').value})});if(!r.ok)throw 0;$('ctext').value='';await loadComments()}catch(e){alert('Comment service is not available yet.')}};"
+          new="$('commentForm').onsubmit=async e=>{e.preventDefault();if(!current)return;$('cmsg').textContent='';try{const r=await fetch(`${API}/api/comments`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({story_id:current.id,name:$('cname').value||'Reader',text:$('ctext').value})});let d={};try{d=await r.json()}catch{}if(!r.ok)throw new Error(d.error||T('commentUnavailable'));$('ctext').value='';$('cmsg').textContent=T('commentPending')}catch(err){$('cmsg').textContent=err.message||T('commentUnavailable')}};"
+          if old not in s:
+              raise SystemExit('comment handler pattern not found')
+          s=s.replace(old,new)
+          p.write_text(s)
+          sw=Path('al-bushra-sw.js')
+          if sw.exists():
+              t=sw.read_text().replace("const CACHE='al-bushra-v2-languages';", "const CACHE='al-bushra-v3-moderation';").replace("const CACHE='al-bushra-v1';", "const CACHE='al-bushra-v3-moderation';")
+              sw.write_text(t)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name 'AL-BUSHRA Automation'
+          git config user.email 'actions@users.noreply.github.com'
+          git add al-bushra.html al-bushra-sw.js
+          git diff --cached --quiet || git commit -m 'Show pending moderation status to AL-BUSHRA readers'
+          git push
