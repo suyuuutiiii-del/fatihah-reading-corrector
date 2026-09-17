@@ -1,0 +1,46 @@
+name: Enable AL-BUSHRA Audio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/enable-albushra-audio.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  enable-audio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Link audio module into AL-BUSHRA
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('al-bushra.html')
+          text = p.read_text(encoding='utf-8')
+          audio = '<script src="al-bushra-audio.js"></script>'
+          i18n = '<script src="al-bushra-i18n.js"></script>'
+          if audio not in text:
+              if i18n in text:
+                  text = text.replace(i18n, i18n + '\n' + audio)
+              else:
+                  text = text.replace('</body>', audio + '\n</body>')
+              p.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Commit change if needed
+        run: |
+          if git diff --quiet; then
+            echo "Audio module already linked."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add al-bushra.html
+          git commit -m "Link AL-BUSHRA audio reader"
+          git push
