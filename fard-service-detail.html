@@ -2,7 +2,7 @@
 <header class="top"><img src="al-bushra/icon.svg" alt="AL-BUSHRA"><div class="brand"><b>AL-BUSHRA · FARD</b><small>Service Detail</small></div><a href="fard.html">FARD Home</a></header><main>
 <nav id="crumbs" class="crumbs"></nav>
 <section class="hero"><span id="eyebrow" class="eyebrow"></span><h1 id="title">FARD Service</h1><p id="desc"></p></section>
-<section class="panel"><h2>What this sub-service can include</h2><div id="includes" class="grid"></div></section>
+<section class="panel"><h2>What this service entails</h2><p class="muted">These are the main forms of help normally covered under this service.</p><div id="includes" class="grid"></div></section>
 <section class="panel"><h2>Safety and verification</h2><div id="safety" class="grid"></div></section>
 <div class="actions"><a id="requestLink" class="btn primary" href="fard-get-help.html">Request this help</a><a id="offerLink" class="btn secondary" href="fard-volunteer.html">Offer this help</a><a id="backLink" class="btn secondary" href="fard-services.html">← Back to service</a></div>
 <div class="warning" style="margin-top:16px"><strong>Emergency:</strong> FARD is not an emergency service. Immediate danger, severe illness, violence, fire or active crime should go to the appropriate emergency or professional service.</div>
@@ -43,7 +43,152 @@ const DATA={
 'accessibility':{name:'Accessibility Support',desc:'Reading, document and practical accessibility assistance.',need:'Document reading / accessibility help',includes:['Reading assistance','Navigation help','Document support'],safety:['Protect confidential information in documents.']},
 'community':{name:'Community Projects',desc:'Skilled service for mosques, schools and Islamic organisations.',need:'Building / maintenance help',includes:['Maintenance','Technical setup','Design/printing support'],safety:['Security-sensitive facility information should not be posted publicly.']}}}
 };
+
+const EXPLAINS={
+'janazah:ghusl':[
+'FARD helps the family locate Muslims who are known or verified to have suitable experience in washing and preparing the deceased.',
+'The team and family agree a suitable time and appropriate location after necessary medical or legal release has been completed.',
+'Volunteers help identify or arrange items normally needed for preparation, while avoiding unnecessary expense or duplication.'
+],
+'janazah:kafan':[
+'Helpers assist the family in obtaining suitable shrouding material in the correct quantity and form.',
+'Basic items needed during preparation can be organised so the family does not have to search for them during bereavement.',
+'A mosque or responsible family contact can coordinate who is providing the materials and when they will be delivered.'
+],
+'janazah:prayer':[
+'FARD can connect the family with an appropriate mosque, imam or recognised community contact for the Janāzah prayer.',
+'The family and mosque agree a suitable prayer time that fits burial arrangements and local requirements.',
+'Necessary community notice can be passed through suitable channels without exposing private family information.'
+],
+'janazah:burial':[
+'FARD can help identify the cemetery or burial contact responsible for the practical arrangements.',
+'The family, mosque and cemetery can coordinate a suitable burial time after required procedures are complete.',
+'Transport for the deceased or essential burial participants can be coordinated where appropriate.',
+'The different parties can stay informed so the family is not left managing every practical detail alone.'
+],
+'janazah:family':[
+'Volunteers may prepare or deliver meals so the bereaved household has less pressure during the first difficult days.',
+'Trusted helpers may handle simple errands such as collecting essentials or delivering necessary items.',
+'Visitor flow can be coordinated so the household is not overwhelmed and important family wishes are respected.',
+'Short-term practical household tasks may be offered where appropriate and agreed by the family.'
+],
+'transport:mosque':[
+'A verified driver may collect the person from an agreed location after the match has been approved.',
+'Where needed, the same arrangement can include taking the person home after the prayer or programme.',
+'A mosque, public landmark or other safe meeting place can be used when a home pickup is unnecessary.'
+],
+'transport:health':[
+'A volunteer may provide non-emergency transport to a clinic or hospital appointment at an agreed time.',
+'A pharmacy journey may be arranged for collection of already-authorised medication or essential items.',
+'Where appropriate, the volunteer may accompany the person for practical support without giving medical advice.'
+],
+'transport:elderly':[
+'After verification, the driver can collect the older person from an agreed safe pickup point.',
+'Reasonable physical assistance may be offered when entering or leaving the vehicle, within the volunteer’s capability.',
+'The match may include a planned return journey so the older person is not left without transport home.'
+],
+'transport:accessibility':[
+'Pickup arrangements can take account of the person’s stated mobility or accessibility needs before the journey begins.',
+'A suitable meeting place can be chosen to reduce unnecessary walking, confusion or physical difficulty.',
+'An escort may accompany the traveller when this is agreed and the volunteer is able to provide it safely.'
+],
+'transport:traveller':[
+'A verified traveller may be transported between essential local points such as a station, mosque, lodging or safe meeting place.',
+'The volunteer can help connect the traveller with a known mosque or Muslim community contact for further local support.',
+'Transport can be provided to an essential destination where the need has been checked and the journey is appropriate.'
+],
+'new-muslim:mentor':[
+'A mentor can make agreed regular contact so the new Muslim has someone dependable to ask simple day-to-day questions.',
+'The mentor can help with basic questions about worship, Muslim life and finding reliable learning resources, while referring difficult matters when necessary.',
+'The mentor can introduce the new Muslim to trustworthy people, programmes and community activities without pressure.'
+],
+'new-muslim:mosque':[
+'A volunteer can accompany or guide the new Muslim during a first visit so entering the mosque feels less unfamiliar.',
+'The person can be introduced to suitable mosque leaders, teachers or community members who can continue to support them.',
+'The volunteer can explain useful classes, prayer times and programmes so the new Muslim knows what is available.'
+],
+'new-muslim:worship':[
+'The learner can be shown the basic steps of wuḍūʾ in a simple and respectful way.',
+'The basic structure and movements of ṣalāh can be taught gradually, without expecting everything to be mastered immediately.',
+'The mentor or tutor can practise with the learner and answer simple questions until the routine becomes easier.'
+],
+'new-muslim:learning':[
+'The learner can begin Qur’an reading at the appropriate level rather than being placed immediately into advanced material.',
+'Useful Arabic words, letters or expressions can be introduced gradually to support worship and Qur’an learning.',
+'A simple learning plan can help the new Muslim know what to study first, what can wait, and when to ask a qualified teacher.'
+],
+'new-muslim:ramadan':[
+'The new Muslim can be connected with a safe household, mosque or community ifṭār so they are not left isolated at sunset.',
+'Basic practical guidance can explain fasting times, suḥūr, ifṭār and common questions, with health concerns referred appropriately.',
+'A volunteer may accompany the new Muslim to suitable Ramadan prayers or programmes until they become familiar with the routine.'
+],
+'new-muslim:belonging':[
+'The new Muslim can be introduced to trustworthy local Muslims rather than being left to search alone.',
+'Agreed check-ins can help reduce isolation, especially during the first months after embracing Islam.',
+'Mosque classes, family-friendly gatherings or other welcoming programmes can be suggested according to the person’s circumstances.'
+],
+'quran:beginner':[
+'The learner is helped to recognise Arabic letters clearly, including letters that look similar but differ by dots or shape.',
+'The teacher shows how letters change and join inside words so the learner can move beyond isolated-letter recognition.',
+'Short, manageable reading exercises are used to build confidence before moving to longer Qur’anic passages.'
+],
+'quran:tajwid':[
+'The teacher listens carefully to the learner’s recitation and identifies specific pronunciation or rule-related areas needing attention.',
+'One or two relevant tajwīd rules can be corrected at a time, with clear examples rather than overwhelming the learner.',
+'A small practice plan can be agreed so the learner knows exactly what to repeat before the next session.'
+],
+'quran:hifz':[
+'The learner and teacher can agree a realistic amount to memorise according to age, ability and available time.',
+'The teacher listens to new memorisation and corrects mistakes before they become fixed habits.',
+'A regular revision schedule is set so previously memorised portions are not lost while new portions are added.'
+],
+'quran:murajaah':[
+'The learner recites previously memorised Qur’an regularly to someone who can listen and identify weaknesses.',
+'Specific revision targets are set for daily or weekly review instead of revising without a clear plan.',
+'Weak passages can be recorded and revisited more often until they become stable again.'
+],
+'quran:new-muslim':[
+'A new Muslim can start with Arabic letters or very basic reading according to their present level.',
+'Short sūrahs commonly used in prayer can be learned gradually with correct pronunciation support.',
+'The teacher can listen patiently and help the learner improve without expecting advanced fluency too quickly.'
+],
+'quran:age':[
+'Children can follow a lighter, more supervised pathway with appropriate lesson length and learning activities.',
+'Adults can use a different pace and method that respects previous education, work commitments and learning goals.',
+'For children, a parent, guardian or responsible institution remains involved in arranging and supervising lessons.'
+],
+'skills:trades':[
+'A skilled volunteer can first inspect or discuss the problem so the actual work needed is understood before anything is changed.',
+'Minor repair or maintenance may be carried out when it is within the person’s verified competence and local safety requirements.',
+'The volunteer can explain what tools or materials are needed before work starts so costs and expectations are clear.'
+],
+'skills:technology':[
+'A volunteer can help diagnose ordinary phone or computer problems and explain practical steps for resolving them.',
+'Website help may include simple setup, correction, updating or guidance within the volunteer’s actual ability.',
+'Basic digital tasks such as installing legitimate software, configuring settings or teaching simple use can be provided without taking unnecessary control of private accounts.'
+],
+'skills:language':[
+'A volunteer may interpret a simple conversation where both parties need help understanding one another.',
+'Documents can be read aloud or explained to someone who has difficulty reading or accessing the text.',
+'Ordinary non-specialist text can be translated at a basic level, while legal, medical or highly technical material is referred to appropriately qualified people.'
+],
+'skills:professional':[
+'A bookkeeper may help organise ordinary records, receipts or simple financial information for a verified community need.',
+'Basic accounting guidance may explain routine processes without pretending to provide regulated professional advice where that is required.',
+'When the issue is beyond the volunteer’s role, the person can be directed to a suitably qualified professional rather than being given uncertain advice.'
+],
+'skills:accessibility':[
+'A volunteer may read text aloud or explain written information to someone who cannot easily access it.',
+'Practical navigation assistance may be provided in a building, programme or community setting where appropriate.',
+'Forms or documents can be helped with while protecting confidential personal information and leaving important decisions to the person concerned.'
+],
+'skills:community':[
+'Verified volunteers can assist with ordinary maintenance tasks in mosques, schools or community facilities within their competence.',
+'Technical equipment, basic digital systems or other practical setups may be installed or configured where appropriate.',
+'Simple design, printing or communication materials can be prepared for legitimate community projects, while sensitive facility information remains private.'
+]
+};
 const qs=new URLSearchParams(location.search),service=qs.get('service'),item=qs.get('item'),s=DATA[service],d=s&&s.items[item];
 if(!d){document.getElementById('title').textContent='Service not found';document.getElementById('desc').textContent='Return to FARD Services and choose a service.';document.getElementById('crumbs').innerHTML='<a href="fard.html">Home</a><span>›</span><a href="fard-services.html">Services</a>';document.getElementById('requestLink').style.display='none';document.getElementById('offerLink').style.display='none';document.getElementById('backLink').href='fard-services.html';}
-else{document.title='FARD — '+d.name;document.getElementById('crumbs').innerHTML='<a href="fard.html">Home</a><span>›</span><a href="fard-services.html">Services</a><span>›</span><a href="'+s.page+'">'+s.name+'</a><span>›</span><strong>'+d.name+'</strong>';document.getElementById('eyebrow').textContent='HOME › SERVICES › '+s.name.toUpperCase()+' › '+d.name.toUpperCase();document.getElementById('title').textContent=d.name;document.getElementById('desc').textContent=d.desc;document.getElementById('includes').innerHTML=d.includes.map(x=>'<div class="safe">'+x+'</div>').join('');document.getElementById('safety').innerHTML=d.safety.map(x=>'<div class="safe">'+x+'</div>').join('');document.getElementById('requestLink').href='fard-get-help.html?service='+encodeURIComponent(service)+'&need='+encodeURIComponent(d.need);document.getElementById('offerLink').href='fard-volunteer.html?service='+encodeURIComponent(service);document.getElementById('backLink').href=s.page;}
+else{document.title='FARD — '+d.name;document.getElementById('crumbs').innerHTML='<a href="fard.html">Home</a><span>›</span><a href="fard-services.html">Services</a><span>›</span><a href="'+s.page+'">'+s.name+'</a><span>›</span><strong>'+d.name+'</strong>';document.getElementById('eyebrow').textContent='HOME › SERVICES › '+s.name.toUpperCase()+' › '+d.name.toUpperCase();document.getElementById('title').textContent=d.name;document.getElementById('desc').textContent=d.desc;const ex=EXPLAINS[service+':'+item]||[];document.getElementById('includes').innerHTML=d.includes.map((x,i)=>'<article class="card"><h3>'+x+'</h3><p>'+(ex[i]||'This forms part of the practical help normally covered under this service.')+'</p></article>').join('');document.getElementById('safety').innerHTML=d.safety.map(x=>'<div class="safe">'+x+'</div>').join('');document.getElementById('requestLink').href='fard-get-help.html?service='+encodeURIComponent(service)+'&need='+encodeURIComponent(d.need);document.getElementById('offerLink').href='fard-volunteer.html?service='+encodeURIComponent(service);document.getElementById('backLink').href=s.page;}
 </script></body></html>
