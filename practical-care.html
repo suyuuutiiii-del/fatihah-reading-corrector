@@ -122,4 +122,4 @@ function getDrafts(){return Object.keys(localStorage).filter(k=>k.startsWith('fa
 showDrafts.onclick=()=>{const d=getDrafts();drafts.innerHTML=d.length?d.map(([k,x])=>'<div class="draftbox"><strong>'+x.kind+'</strong><br><span class="muted small">'+new Date(x.saved).toLocaleString()+'</span><pre style="white-space:pre-wrap;font:inherit">'+escapeHtml(x.title+'\n'+x.details)+'</pre></div>').join(''):'<p class="muted">No Practical Care drafts are saved on this device.</p>'};
 clearDrafts.onclick=()=>{if(!confirm('Clear all saved Practical Care drafts on this device?'))return;getDrafts().forEach(([k])=>localStorage.removeItem(k));drafts.innerHTML='<p class="muted">Saved drafts cleared.</p>'};
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
-</script></body></html>
+</script><script src="fard-live.js"></script></body></html>
