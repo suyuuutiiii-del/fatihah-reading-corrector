@@ -1,5 +1,5 @@
-const CACHE='al-bushra-v6-fard-full';
-const CORE=['al-bushra.html','al-bushra.webmanifest','al-bushra/icon.svg','al-bushra-archive.html','al-bushra-i18n.js','al-bushra-igbo.js','al-bushra-language-fix.js','al-bushra-audio.js','fard.html','deenpath.html','ummah-access.html','practical-care.html','janazah-support.html','transport-support.html','new-muslim-support.html','quran-support.html','skills-support.html'];
+const CACHE='al-bushra-v7-fard-phase2';
+const CORE=['al-bushra.html','al-bushra.webmanifest','al-bushra/icon.svg','al-bushra-archive.html','al-bushra-i18n.js','al-bushra-igbo.js','al-bushra-language-fix.js','al-bushra-audio.js','fard.html','deenpath.html','ummah-access.html','practical-care.html','janazah-support.html','transport-support.html','new-muslim-support.html','quran-support.html','skills-support.html','fard-live.js','fard-status.html','fard-admin.html'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).catch(()=>{}));self.skipWaiting();});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});
 self.addEventListener('fetch',event=>{if(event.request.method!=='GET')return;event.respondWith(fetch(event.request,{cache:'no-store'}).then(response=>{const copy=response.clone();caches.open(CACHE).then(c=>c.put(event.request,copy)).catch(()=>{});return response;}).catch(()=>caches.match(event.request).then(r=>r||caches.match('al-bushra.html'))));});
