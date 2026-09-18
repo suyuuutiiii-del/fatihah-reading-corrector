@@ -1,4 +1,4 @@
-const FARD_SERVICES = ['janazah','transport','new-muslim','quran','practical-care','skills','general'];
+const FARD_SERVICES = ['janazah','transport','new-muslim','quran','practical-care','skills','mutual-aid','general'];
 
 export default {
   async fetch(request, env) {
