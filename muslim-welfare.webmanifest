@@ -1,0 +1,19 @@
+{
+  "name": "Muslim Welfare — Care, Family & Mutual Support",
+  "short_name": "Muslim Welfare",
+  "description": "Muslim mutual aid, family welfare, marriage support and verified community care.",
+  "start_url": "muslim-welfare.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f8f5",
+  "theme_color": "#0b5a3c",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "muslim-welfare-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
