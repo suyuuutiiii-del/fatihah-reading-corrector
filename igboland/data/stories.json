@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-17T07:30:00Z",
+  "updated_at": "2026-09-18T08:54:59+01:00",
   "stories": [
     {
       "id": "isa-okonkwo-enugu",
@@ -24,6 +24,31 @@
       "source_title": "Inside the world of Igbo Muslims in Nigeria’s South-east region",
       "source_url": "https://muslimnews.com.ng/2021/09/23/inside-the-world-of-igbo-muslims-in-nigerias-south-east-region/",
       "source_date": "2021-09-23"
+    },
+    {
+      "id": "aisha-suleiman-nworie-enugu",
+      "name": "Aisha Suleiman",
+      "former_name": "Josephine Oziomachukwu Nworie",
+      "state": "Enugu",
+      "town": "Awgu LGA",
+      "status": "verified-public-interview",
+      "profession": "Biochemistry graduate",
+      "summary": "In a Daily Trust/Trust Radio interview, Aisha Suleiman, formerly Josephine Oziomachukwu Nworie, publicly said she converted to Islam about five years before the 2023 interview. She identified her family as Igbo from Awgu Local Government Area of Enugu State and described her reasons for embracing Islam and her continuing commitment despite family opposition.",
+      "source_title": "Despite challenges, I’ve no regret embracing Islam – Igbo Christian convert",
+      "source_url": "https://trustradio.com.ng/en/despite-challenges-ive-no-regret-embracing-islam-igbo-christian-convert",
+      "source_date": "2023-10-07"
+    },
+    {
+      "id": "yusuf-onumaegbu-abia",
+      "name": "Yusuf Onumaegbu",
+      "state": "Abia",
+      "town": "Amaano Ovungwo, Isiala Ngwa South",
+      "status": "verified-public-interview",
+      "profession": "Traditional ruler, Eze Amara I of Amaano Ovungwo",
+      "summary": "In a 2024 interview with The PUNCH, Yusuf Onumaegbu publicly said he embraced Islam about 49 years earlier while working in northern Nigeria. He said reading Islamic books and the Qur’an and his interactions with Muslims led to his decision. He identified himself as Eze Amara I of Amaano Ovungwo in Isiala Ngwa South, Abia State.",
+      "source_title": "Why we profess Islam despite discrimination in S’East – Igbo Muslims",
+      "source_url": "https://punchng.com/why-we-profess-islam-despite-discrimination-in-seast-igbo-muslims/",
+      "source_date": "2024-04-07"
     }
   ],
   "research": [
