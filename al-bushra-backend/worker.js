@@ -155,9 +155,9 @@ export default {
         const owner = await getFardOwner(env.DB, subjectType, id);
         if (!owner) return json({ error: 'FARD entry not found' }, 404, cors);
         if (!token || !(await tokenMatches(token, owner.manage_token_hash))) return json({ error: 'Invalid private management key' }, 401, cors);
-        const matches = await getOwnerMatches(env.DB, subjectType, id);
+        const matches = await getOwnerMatches(env.DB, subjectType, owner.id);
         const enriched = [];
-        for (const m of matches) enriched.push(await publicMatchForOwner(env.DB, subjectType, id, m));
+        for (const m of matches) enriched.push(await publicMatchForOwner(env.DB, subjectType, owner.id, m));
         return json({
           ok: true,
           entry: publicOwnerEntry(subjectType, owner),
@@ -196,6 +196,12 @@ export default {
         else if (fresh.requester_response === 'accepted') status = 'accepted_requester';
         else if (fresh.volunteer_response === 'accepted') status = 'accepted_volunteer';
         await env.DB.prepare(`UPDATE fard_matches SET status = ?, updated_at = datetime('now') WHERE id = ?`).bind(status, matchId).run();
+        if (status === 'declined') {
+          await env.DB.batch([
+            env.DB.prepare(`UPDATE fard_requests SET status='approved', updated_at=datetime('now') WHERE id=? AND status='matched'`).bind(fresh.request_id),
+            env.DB.prepare(`UPDATE fard_volunteers SET status='approved', updated_at=datetime('now') WHERE id=? AND status='matched'`).bind(fresh.volunteer_id)
+          ]);
+        }
         const finalMatch = await env.DB.prepare(`SELECT * FROM fard_matches WHERE id = ?`).bind(matchId).first();
         return json({ ok: true, match: await publicMatchForOwner(env.DB, subjectType, subjectId, finalMatch) }, 200, cors);
       }
