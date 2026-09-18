@@ -67,6 +67,8 @@ export default {
         const title = clean(body.title, 140);
         const area = clean(body.area, 120);
         const timing = clean(body.timing, 120);
+        const priority = normalizeStatus(body.priority, ['normal','soon','urgent'], 'normal');
+        const recurrence = normalizeStatus(body.recurrence, ['one-time','daily','weekly','monthly','as-needed'], 'one-time');
         const details = clean(body.details, 2200);
         const tasks = cleanArray(body.tasks, 16, 90);
         const preferredLanguage = clean(body.preferred_language, 80);
@@ -87,10 +89,10 @@ export default {
         await env.DB.batch([
           env.DB.prepare(
             `INSERT INTO fard_requests
-             (id, ref_code, service_key, title, area, timing, details, tasks, preferred_language, verifier_name,
-              verification_status, status, manage_token_hash, created_at, updated_at)
-             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'pending', ?, datetime('now'), datetime('now'))`
-          ).bind(id, refCode, serviceKey, title, area, timing, details, JSON.stringify(tasks), preferredLanguage, verifierName, manageHash),
+             (id, ref_code, service_key, title, area, timing, priority, recurrence, details, tasks, preferred_language, verifier_name,
+              verification_status, status, manage_token_hash, completed_occurrences, created_at, updated_at)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'pending', ?, 0, datetime('now'), datetime('now'))`
+          ).bind(id, refCode, serviceKey, title, area, timing, priority, recurrence, details, JSON.stringify(tasks), preferredLanguage, verifierName, manageHash),
           env.DB.prepare(
             `INSERT INTO fard_private_contacts
              (subject_type, subject_id, contact_name, contact_method, contact_value, created_at)
@@ -339,12 +341,14 @@ export default {
         let status=fresh.status;
         if(fresh.requester_completed_at&&fresh.volunteer_completed_at&&fresh.status!=='completed'){
           status='completed';
+          const recurringRequest=await env.DB.prepare(`SELECT recurrence FROM fard_requests WHERE id=?`).bind(fresh.request_id).first();
+          const requestNextStatus=recurringRequest&&recurringRequest.recurrence&&recurringRequest.recurrence!=='one-time'?'approved':'completed';
           await env.DB.batch([
             env.DB.prepare(`UPDATE fard_matches SET status='completed', updated_at=datetime('now') WHERE id=?`).bind(matchId),
-            env.DB.prepare(`UPDATE fard_requests SET status='completed', updated_at=datetime('now') WHERE id=?`).bind(fresh.request_id),
+            env.DB.prepare(`UPDATE fard_requests SET status=?, completed_occurrences=completed_occurrences+1, updated_at=datetime('now') WHERE id=?`).bind(requestNextStatus,fresh.request_id),
             env.DB.prepare(`UPDATE fard_volunteers SET status='approved', completed_services=completed_services+1, updated_at=datetime('now') WHERE id=?`).bind(fresh.volunteer_id)
           ]);
-          await addAudit(env.DB,'match',matchId,'service_completed','system','Both sides confirmed completion.');
+          await addAudit(env.DB,'match',matchId,'service_completed','system',requestNextStatus==='approved'?'Both sides confirmed this occurrence; recurring request returned to matching pool.':'Both sides confirmed completion.');
         }
         return json({ok:true,status,requester_confirmed:!!fresh.requester_completed_at,volunteer_confirmed:!!fresh.volunteer_completed_at},200,cors);
       }
@@ -710,7 +714,7 @@ async function getFardOwner(db,type,id){
 }
 function publicOwnerEntry(type,row){
   if(type==='request') return {
-    type:'request',id:row.id,ref_code:row.ref_code,service_key:row.service_key,title:row.title,area:row.area,timing:row.timing,
+    type:'request',id:row.id,ref_code:row.ref_code,service_key:row.service_key,title:row.title,area:row.area,timing:row.timing,priority:row.priority||'normal',recurrence:row.recurrence||'one-time',completed_occurrences:Number(row.completed_occurrences||0),
     tasks:parseJson(row.tasks,[]),verification_status:row.verification_status,status:row.status,created_at:row.created_at,updated_at:row.updated_at
   };
   return {
@@ -817,6 +821,9 @@ async function ensureSchema(db) {
       title TEXT NOT NULL,
       area TEXT NOT NULL,
       timing TEXT,
+      priority TEXT NOT NULL DEFAULT 'normal',
+      recurrence TEXT NOT NULL DEFAULT 'one-time',
+      completed_occurrences INTEGER NOT NULL DEFAULT 0,
       details TEXT NOT NULL,
       tasks TEXT NOT NULL DEFAULT '[]',
       preferred_language TEXT,
