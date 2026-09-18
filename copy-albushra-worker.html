@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Copy AL-BUSHRA Worker Code</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#f7faf8;margin:0;padding:20px;color:#173b2b}
+.card{max-width:820px;margin:auto;background:white;border:1px solid #d8e5dd;border-radius:18px;padding:20px;box-shadow:0 8px 24px #0001}
+h1{font-size:1.5rem;margin-top:0}.ok{background:#eaf7ef;padding:12px;border-radius:12px}
+button{width:100%;padding:16px;border:0;border-radius:12px;background:#0a7a4b;color:white;font-size:1.1rem;font-weight:700;margin:14px 0}
+textarea{width:100%;height:320px;box-sizing:border-box;font-family:monospace;font-size:12px}
+.small{font-size:.9rem;color:#51665c}
+</style>
+</head>
+<body><div class="card">
+<h1>AL-BUSHRA Worker Code</h1>
+<div class="ok">Tap the button below. Then return to Cloudflare → Edit code, select all old code, and paste.</div>
+<button id="copy">Copy Worker Code</button>
+<p id="status" class="small"></p>
+<textarea id="code" readonly>export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const origin = request.headers.get('Origin') || '*';
+    const cors = {
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'GET,POST,PATCH,DELETE,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Admin-Token',
+      'Access-Control-Max-Age': '86400',
+      'Content-Type': 'application/json; charset=utf-8'
+    };
+
+    if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
+
+    try {
+      await ensureSchema(env.DB);
+      // Public comments: readers see only comments explicitly approved by the admin.
+      if (url.pathname === '/api/comments' &amp;&amp; request.method === 'GET') {
+        const storyId = (url.searchParams.get('story_id') || '').trim();
+        if (!storyId) return json({ error: 'story_id required' }, 400, cors);
+        const { results } = await env.DB.prepare(
+          `SELECT id, story_id, name, text, created_at FROM comments WHERE story_id = ? AND status = 'approved' ORDER BY created_at DESC LIMIT 100`
+        ).bind(storyId).all();
+        return json({ comments: results }, 200, cors);
+      }
+
+      // Public comment submission: automatic adab/spam gate first, then hold for admin review.
+      if (url.pathname === '/api/comments' &amp;&amp; request.method === 'POST') {
+        const body = await request.json();
+        const storyId = clean(body.story_id, 100);
+        const name = clean(body.name || 'Reader', 60);
+        const text = clean(body.text, 700);
+        if (!storyId || !text) return json({ error: 'story_id and text required' }, 400, cors);
+
+        const moderation = moderate(text);
+        if (!moderation.ok) return json({ error: 'Please rewrite the comment with Islamic adab.', reason: moderation.reason }, 400, cors);
+
+        const id = crypto.randomUUID();
+        await env.DB.prepare(
+          `INSERT INTO comments (id, story_id, name, text, status, created_at) VALUES (?, ?, ?, ?, 'pending', datetime('now'))`
+        ).bind(id, storyId, name, text).run();
+        return json({ ok: true, id, status: 'pending', message: 'Comment received for moderation.' }, 201, cors);
+      }
+
+      // Public story / achiever / improvement submissions always wait for admin review.
+      if (url.pathname === '/api/submissions' &amp;&amp; request.method === 'POST') {
+        const body = await request.json();
+        const type = clean(body.type, 80);
+        const title = clean(body.title, 140);
+        const details = clean(body.details, 1800);
+        if (!type || !title || !details) return json({ error: 'type, title and details required' }, 400, cors);
+
+        const id = crypto.randomUUID();
+        await env.DB.prepare(
+          `INSERT INTO submissions (id, type, title, details, status, created_at) VALUES (?, ?, ?, ?, 'pending', datetime('now'))`
+        ).bind(id, type, title, details).run();
+        return json({ ok: true, id, status: 'pending' }, 201, cors);
+      }
+
+      // Everything below this point is private admin moderation.
+      if (url.pathname.startsWith('/api/admin/')) {
+        const auth = checkAdmin(request, env);
+        if (!auth.ok) return json({ error: auth.error }, auth.status, cors);
+
+        if (url.pathname === '/api/admin/comments' &amp;&amp; request.method === 'GET') {
+          const status = normalizeStatus(url.searchParams.get('status'), ['approved', 'hidden', 'pending'], 'all');
+          const storyId = clean(url.searchParams.get('story_id') || '', 100);
+          let sql = `SELECT id, story_id, name, text, status, created_at FROM comments`;
+          const values = [];
+          const where = [];
+          if (status !== 'all') { where.push('status = ?'); values.push(status); }
+          if (storyId) { where.push('story_id = ?'); values.push(storyId); }
+          if (where.length) sql += ' WHERE ' + where.join(' AND ');
+          sql += ` ORDER BY CASE status WHEN 'pending' THEN 0 WHEN 'approved' THEN 1 ELSE 2 END, created_at DESC LIMIT 300`;
+          const { results } = await env.DB.prepare(sql).bind(...values).all();
+          return json({ comments: results }, 200, cors);
+        }
+
+        if (url.pathname === '/api/admin/submissions' &amp;&amp; request.method === 'GET') {
+          const status = normalizeStatus(url.searchParams.get('status'), ['pending', 'approved', 'hidden', 'rejected'], 'all');
+          let sql = `SELECT id, type, title, details, status, created_at FROM submissions`;
+          const values = [];
+          if (status !== 'all') { sql += ' WHERE status = ?'; values.push(status); }
+          sql += ` ORDER BY CASE status WHEN 'pending' THEN 0 WHEN 'approved' THEN 1 WHEN 'hidden' THEN 2 ELSE 3 END, created_at DESC LIMIT 300`;
+          const { results } = await env.DB.prepare(sql).bind(...values).all();
+          return json({ submissions: results }, 200, cors);
+        }
+
+        const commentMatch = url.pathname.match(/^\/api\/admin\/comments\/([^/]+)$/);
+        if (commentMatch &amp;&amp; request.method === 'PATCH') {
+          const id = clean(decodeURIComponent(commentMatch[1]), 100);
+          const body = await request.json();
+          const status = normalizeStatus(body.status, ['approved', 'hidden', 'pending']);
+          if (!status) return json({ error: 'status must be approved, hidden or pending' }, 400, cors);
+          const result = await env.DB.prepare(`UPDATE comments SET status = ? WHERE id = ?`).bind(status, id).run();
+          if (!changed(result)) return json({ error: 'comment not found' }, 404, cors);
+          return json({ ok: true, id, status }, 200, cors);
+        }
+        if (commentMatch &amp;&amp; request.method === 'DELETE') {
+          const id = clean(decodeURIComponent(commentMatch[1]), 100);
+          const result = await env.DB.prepare(`DELETE FROM comments WHERE id = ?`).bind(id).run();
+          if (!changed(result)) return json({ error: 'comment not found' }, 404, cors);
+          return json({ ok: true, id, deleted: true }, 200, cors);
+        }
+
+        const submissionMatch = url.pathname.match(/^\/api\/admin\/submissions\/([^/]+)$/);
+        if (submissionMatch &amp;&amp; request.method === 'PATCH') {
+          const id = clean(decodeURIComponent(submissionMatch[1]), 100);
+          const body = await request.json();
+          const status = normalizeStatus(body.status, ['pending', 'approved', 'hidden', 'rejected']);
+          if (!status) return json({ error: 'status must be pending, approved, hidden or rejected' }, 400, cors);
+          const result = await env.DB.prepare(`UPDATE submissions SET status = ? WHERE id = ?`).bind(status, id).run();
+          if (!changed(result)) return json({ error: 'submission not found' }, 404, cors);
+          return json({ ok: true, id, status }, 200, cors);
+        }
+        if (submissionMatch &amp;&amp; request.method === 'DELETE') {
+          const id = clean(decodeURIComponent(submissionMatch[1]), 100);
+          const result = await env.DB.prepare(`DELETE FROM submissions WHERE id = ?`).bind(id).run();
+          if (!changed(result)) return json({ error: 'submission not found' }, 404, cors);
+          return json({ ok: true, id, deleted: true }, 200, cors);
+        }
+
+        if (url.pathname === '/api/admin/health' &amp;&amp; request.method === 'GET') {
+          return json({ ok: true, service: 'AL-BUSHRA admin moderation', authenticated: true }, 200, cors);
+        }
+
+        return json({ error: 'Admin endpoint not found' }, 404, cors);
+      }
+
+      if (url.pathname === '/api/health') {
+        return json({ ok: true, service: 'AL-BUSHRA community backend', moderation: 'admin-approval-required' }, 200, cors);
+      }
+
+      return json({ error: 'Not found' }, 404, cors);
+    } catch (err) {
+      console.error(err);
+      return json({ error: 'Server error' }, 500, cors);
+    }
+  }
+};
+
+function clean(value, max) {
+  return String(value || '').trim().replace(/\s+/g, ' ').slice(0, max);
+}
+
+function moderate(text) {
+  const lower = text.toLowerCase();
+  const blocked = [
+    'idiot','stupid','fool','shut up','kill yourself','porn','xxx',
+    'takfir','kafir because','you are kafir','sectarian abuse'
+  ];
+  if (blocked.some(x =&gt; lower.includes(x))) return { ok: false, reason: 'inappropriate language' };
+  if ((text.match(/https?:\/\//g) || []).length &gt; 2) return { ok: false, reason: 'too many links' };
+  return { ok: true };
+}
+
+function checkAdmin(request, env) {
+  if (!env.ADMIN_TOKEN) {
+    return { ok: false, status: 503, error: 'Admin moderation is not configured yet.' };
+  }
+  const auth = request.headers.get('Authorization') || '';
+  const bearer = auth.startsWith('Bearer ') ? auth.slice(7).trim() : '';
+  const headerToken = (request.headers.get('X-Admin-Token') || '').trim();
+  const token = bearer || headerToken;
+  if (!token || token !== env.ADMIN_TOKEN) return { ok: false, status: 401, error: 'Invalid admin token' };
+  return { ok: true };
+}
+
+function normalizeStatus(value, allowed, fallback = '') {
+  const status = clean(value || '', 30).toLowerCase();
+  if (!status &amp;&amp; fallback) return fallback;
+  return allowed.includes(status) ? status : '';
+}
+
+function changed(result) {
+  return Number(result?.meta?.changes || result?.changes || 0) &gt; 0;
+}
+
+function json(data, status, headers) {
+  return new Response(JSON.stringify(data), { status, headers });
+}
+
+
+async function ensureSchema(db) {
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS comments (
+      id TEXT PRIMARY KEY,
+      story_id TEXT NOT NULL,
+      name TEXT NOT NULL,
+      text TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_comments_story_status_created
+    ON comments(story_id, status, created_at DESC);
+    CREATE TABLE IF NOT EXISTS submissions (
+      id TEXT PRIMARY KEY,
+      type TEXT NOT NULL,
+      title TEXT NOT NULL,
+      details TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_submissions_status_created
+    ON submissions(status, created_at DESC);
+  `);
+}
+</textarea>
+<script>
+const btn=document.getElementById('copy'), ta=document.getElementById('code'), st=document.getElementById('status');
+btn.onclick=async()=>{try{await navigator.clipboard.writeText(ta.value);st.textContent='Copied successfully. Return to Cloudflare and paste it.';}catch(e){ta.focus();ta.select();document.execCommand('copy');st.textContent='Copied. Return to Cloudflare and paste it.';}};
+</script>
+</div></body></html>
