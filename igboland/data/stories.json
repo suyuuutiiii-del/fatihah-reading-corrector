@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-18T08:54:59+01:00",
+  "updated_at": "2026-09-19T08:49:04+01:00",
   "stories": [
     {
       "id": "isa-okonkwo-enugu",
@@ -49,6 +49,19 @@
       "source_title": "Why we profess Islam despite discrimination in S’East – Igbo Muslims",
       "source_url": "https://punchng.com/why-we-profess-islam-despite-discrimination-in-seast-igbo-muslims/",
       "source_date": "2024-04-07"
+    },
+    {
+      "id": "musa-sylvester-dimunah-imo",
+      "name": "Musa Dimunah",
+      "former_name": "Sylvester O. Dimunah",
+      "state": "Imo",
+      "town": "Not stated in the cited report",
+      "status": "verified-public-interview",
+      "profession": "Traditional ruler; Vice Chairman of the Council of Village Heads in Imo State",
+      "summary": "In a telephone interview originally reported by OnIslam and preserved by Alukah, Imo traditional ruler Sylvester O. Dimunah, who took the name Musa Dimunah, publicly described embracing Islam and said his decision followed his own study of the religion and his positive impressions of Muslim conduct. Anadolu Agency independently reported in August 2013 that the Imo monarch had converted earlier that year.",
+      "source_title": "Islam in Igbo Land",
+      "source_url": "https://en.alukah.net/shariah/12/1832/",
+      "source_date": "2013-11-03"
     }
   ],
   "research": [
