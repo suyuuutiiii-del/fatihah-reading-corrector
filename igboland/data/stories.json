@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-19T08:49:04+01:00",
+  "updated_at": "2026-09-20T08:21:49+01:00",
   "stories": [
     {
       "id": "isa-okonkwo-enugu",
@@ -62,6 +62,19 @@
       "source_title": "Islam in Igbo Land",
       "source_url": "https://en.alukah.net/shariah/12/1832/",
       "source_date": "2013-11-03"
+    },
+    {
+      "id": "fareedah-vivian-metchie-anambra",
+      "name": "Fareedah Vivian Metchie",
+      "former_name": "Vivian Metchie",
+      "state": "Anambra",
+      "town": "Not stated in the cited report",
+      "status": "verified-public-interview",
+      "profession": "Nollywood actress",
+      "summary": "Vivian Metchie, an Igbo Nollywood actress from Anambra State, publicly discussed her conversion to Islam in an interview, saying it was her personal decision after study and that she found the peace she was seeking in the Qur’an. She adopted the Muslim name Fareedah. The Nation later reproduced her first-person account of the conversion.",
+      "source_title": "Nollywood celebrities who dumped Christianity",
+      "source_url": "https://thenationonlineng.net/nollywood-celebrities-who-dumped-christianity/",
+      "source_date": "2019-09-28"
     }
   ],
   "research": [
