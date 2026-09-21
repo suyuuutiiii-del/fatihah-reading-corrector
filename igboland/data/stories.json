@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-20T08:21:49+01:00",
+  "updated_at": "2026-09-21T08:53:01+01:00",
   "stories": [
     {
       "id": "isa-okonkwo-enugu",
@@ -75,6 +75,18 @@
       "source_title": "Nollywood celebrities who dumped Christianity",
       "source_url": "https://thenationonlineng.net/nollywood-celebrities-who-dumped-christianity/",
       "source_date": "2019-09-28"
+    },
+    {
+      "id": "mohammed-murtala-chukwuemeka-imo",
+      "name": "Mohammed Murtala Chukwuemeka",
+      "state": "Imo",
+      "town": "Not stated in the cited report",
+      "status": "verified-public-interview",
+      "profession": "Islamic cleric and Igbo-language Qur’an translator",
+      "summary": "In a 2022 BBC report and interview, Mohammed Murtala Chukwuemeka, an Igbo man from Imo State, publicly discussed his work translating the Qur’an into Igbo. The BBC report states that he converted to Islam in 1989 and later studied to become an Islamic cleric. In the interview he explained that he wanted Igbo people to have access to Islamic teaching in their own language.",
+      "source_title": "First Igbo translation of Quran published in Nigeria",
+      "source_url": "https://www.myjoyonline.com/first-igbo-translation-of-quran-published-in-nigeria/",
+      "source_date": "2022-07-02"
     }
   ],
   "research": [
