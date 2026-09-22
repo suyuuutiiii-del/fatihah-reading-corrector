@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-21T08:53:01+01:00",
+  "updated_at": "2026-09-22T08:41:10+01:00",
   "stories": [
     {
       "id": "isa-okonkwo-enugu",
@@ -87,6 +87,19 @@
       "source_title": "First Igbo translation of Quran published in Nigeria",
       "source_url": "https://www.myjoyonline.com/first-igbo-translation-of-quran-published-in-nigeria/",
       "source_date": "2022-07-02"
+    },
+    {
+      "id": "aishah-charity-uzoechina-southeast",
+      "name": "Aishah Uzoechina",
+      "former_name": "Charity Uzoechina",
+      "state": "Other",
+      "town": "South-East origin; specific home town not stated in the cited source",
+      "status": "verified-public-interview",
+      "profession": "Former Federal Polytechnic Bida student",
+      "summary": "In an Anadolu Agency telephone interview published on 15 August 2013, 25-year-old Charity Uzoechina, who adopted the Muslim name Aishah, personally said that she embraced Islam voluntarily after reading the Qur’an and observing the conduct of Muslim friends. The report places her family background in Nigeria’s mainly Christian South-East and records that a court treated her as old enough to choose her faith and residence. Because contemporary reports disputed whether the conversion was voluntary, this entry relies specifically on her own direct public statement rather than third-party claims.",
+      "source_title": "Muslim convert stirs uproar in Nigeria",
+      "source_url": "https://www.aa.com.tr/en/world/muslim-convert-stirs-uproar-in-nigeria/225651",
+      "source_date": "2013-08-15"
     }
   ],
   "research": [
