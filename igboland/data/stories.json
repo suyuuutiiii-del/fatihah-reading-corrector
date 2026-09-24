@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-09-23T08:11:26+01:00",
+  "updated_at": "2026-09-24T08:33:57+01:00",
   "stories": [
     {
       "id": "isa-okonkwo-enugu",
@@ -112,6 +112,19 @@
       "source_title": "Muslim convert stirs uproar in Nigeria",
       "source_url": "https://www.aa.com.tr/en/world/muslim-convert-stirs-uproar-in-nigeria/225651",
       "source_date": "2013-08-15"
+    },
+    {
+      "id": "ibrahim-uchenna-ukah-imo",
+      "name": "Ibrahim Ukah",
+      "former_name": "Uchenna Ukah",
+      "state": "Imo",
+      "town": "Not stated in the cited report",
+      "status": "verified-public-statement",
+      "profession": "Not stated in the cited report",
+      "summary": "At a public conversion ceremony at the National Mosque in Abuja in November 2013, Ibrahim Ukah, formerly Uchenna Ukah, was identified among adult Igbo converts from Imo State. The report placed the male converts between ages 25 and 35 and directly quoted Ukah explaining that he was attracted to Islam by what he regarded as its truth, charity, peace and solace.",
+      "source_title": "Governors Shower Cash on Christians that converted to Islam",
+      "source_url": "https://www.nigerianeye.com/2013/11/governors-shower-cash-christains-who.html",
+      "source_date": "2013-11-17"
     }
   ],
   "research": [
